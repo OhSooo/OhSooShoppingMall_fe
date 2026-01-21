@@ -19,7 +19,8 @@ export default function PageShell({ children }: Props) {
           display: 'flex',
           justifyContent: 'center',
           padding: '40px 48px',
-          minHeight: 'calc(100vh - 64px - 96px)', // 전체 높이 - header - footer
+          // 고정 최소 높이 - 브라우저가 작아지면 스크롤 발생
+          minHeight: '500px',
         }}
       >
         <div
@@ -30,6 +31,8 @@ export default function PageShell({ children }: Props) {
             border: '3px solid #BF4134',
             borderRadius: '3px',
             padding: '24px 32px',
+            // 컨텐츠에 맞게 자연스럽게 늘어남
+            height: 'fit-content',
             minHeight: '400px',
           }}
         >

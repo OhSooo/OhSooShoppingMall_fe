@@ -1,72 +1,331 @@
 import { useMemo, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import PageShell from '../../components/common/PageShell';
 
-type Role = 'USER' | 'STORE_OWNER' | 'ADMIN';
+// 소셜 로그인 Provider 타입
+type SocialProvider = 'google' | 'naver' | 'kakao';
+
+// 소셜 로그인 설정
+const socialLoginConfig: Record<
+  SocialProvider,
+  { label: string; bgColor: string; textColor: string; hoverBg: string }
+> = {
+  google: {
+    label: '구글 계정으로 로그인',
+    bgColor: '#FDFDFD',
+    textColor: '#1B1B1B',
+    hoverBg: '#EBEBEB',
+  },
+  naver: {
+    label: '네이버 계정으로 로그인',
+    bgColor: '#03C75A',
+    textColor: '#FDFDFD',
+    hoverBg: '#02b351',
+  },
+  kakao: {
+    label: '카카오 계정으로 로그인',
+    bgColor: '#FEE500',
+    textColor: '#1B1B1B',
+    hoverBg: '#e6cf00',
+  },
+};
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const [params] = useSearchParams();
-  const [role, setRole] = useState<Role>('USER');
+
+  // 폼 상태
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  // 소셜 버튼 hover 상태
+  const [hoveredSocial, setHoveredSocial] = useState<SocialProvider | null>(null);
 
   const redirect = useMemo(() => {
     const raw = params.get('redirect');
     if (!raw) return '/';
     try {
-      // redirect는 AppRouter에서 encodeURIComponent로 넣으니까 decode
       const decoded = decodeURIComponent(raw);
-      // 보안상 외부 URL 같은 건 막고 싶으면 여기서 체크 가능
       return decoded.startsWith('/') ? decoded : '/';
     } catch {
       return '/';
     }
   }, [params]);
 
-  const handleLogin = () => {
-    // 임시 로그인 처리 (나중에 API 호출 성공 시점에 이 부분만 유지하면 됨)
-    localStorage.setItem('accessToken', 'test-token');
-    localStorage.setItem('role', role);
+  // 로컬 로그인 처리
+  const handleLocalLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-    navigate(redirect, { replace: true });
+    if (!email || !password) {
+      alert('이메일과 비밀번호를 입력해주세요.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // TODO: 실제 로그인 API 호출
+      // const response = await loginApi({ email, password });
+
+      // 임시 로그인 처리
+      localStorage.setItem('accessToken', 'test-token');
+      localStorage.setItem('role', 'USER');
+
+      navigate(redirect, { replace: true });
+    } catch (error) {
+      alert('로그인에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('role');
-    navigate('/', { replace: true });
+  // 소셜 로그인 처리
+  const handleSocialLogin = (provider: SocialProvider) => {
+    // TODO: 실제 소셜 로그인 URL로 이동
+    const socialLoginUrls: Record<SocialProvider, string> = {
+      google: `${import.meta.env.VITE_API_BASE_URL || ''}/oauth2/authorization/google`,
+      naver: `${import.meta.env.VITE_API_BASE_URL || ''}/oauth2/authorization/naver`,
+      kakao: `${import.meta.env.VITE_API_BASE_URL || ''}/oauth2/authorization/kakao`,
+    };
+
+    window.location.href = socialLoginUrls[provider];
   };
 
   return (
     <PageShell>
-      <p>임시 로그인 페이지 (redirect 복귀 테스트용)</p>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          maxWidth: '400px',
+          margin: '0 auto',
+          padding: '40px 0 80px 0',
+        }}
+      >
+        {/* 로그인 타이틀 */}
+        <h1
+          style={{
+            fontSize: '28px',
+            fontWeight: '700',
+            color: '#1B1B1B',
+            marginBottom: '40px',
+            textAlign: 'center',
+          }}
+        >
+          로그인
+        </h1>
 
-      <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-        <label>
-          Role:
-          <select value={role} onChange={(e) => setRole(e.target.value as Role)}>
-            <option value="USER">USER</option>
-            <option value="STORE_OWNER">STORE_OWNER</option>
-            <option value="ADMIN">ADMIN</option>
-          </select>
-        </label>
+        {/* 로컬 로그인 폼 */}
+        <form
+          onSubmit={handleLocalLogin}
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '24px',
+          }}
+        >
+          {/* 이메일 입력 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <label
+              htmlFor="email"
+              style={{
+                fontSize: '14px',
+                fontWeight: '500',
+                color: '#444444',
+              }}
+            >
+              이메일
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="example@email.com"
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                fontSize: '15px',
+                border: '1px solid #CACACA',
+                borderRadius: '6px',
+                outline: 'none',
+                transition: 'border-color 0.2s',
+                backgroundColor: '#FDFDFD',
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#BF4134')}
+              onBlur={(e) => (e.target.style.borderColor = '#CACACA')}
+            />
+            {/* 이메일 유효성 검사 메시지 영역 (나중에 사용) */}
+            <div style={{ minHeight: '18px' }}></div>
+          </div>
 
-        <button type="button" onClick={handleLogin}>
-          Login (set token/role + redirect)
-        </button>
+          {/* 비밀번호 입력 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <label
+              htmlFor="password"
+              style={{
+                fontSize: '14px',
+                fontWeight: '500',
+                color: '#444444',
+              }}
+            >
+              비밀번호
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="비밀번호를 입력하세요"
+              style={{
+                width: '100%',
+                padding: '12px 16px',
+                fontSize: '15px',
+                border: '1px solid #CACACA',
+                borderRadius: '6px',
+                outline: 'none',
+                transition: 'border-color 0.2s',
+                backgroundColor: '#FDFDFD',
+              }}
+              onFocus={(e) => (e.target.style.borderColor = '#BF4134')}
+              onBlur={(e) => (e.target.style.borderColor = '#CACACA')}
+            />
+            {/* 비밀번호 유효성 검사 메시지 영역 (나중에 사용) */}
+            <div style={{ minHeight: '18px' }}></div>
+          </div>
 
-        <button type="button" onClick={handleLogout}>
-          Logout (clear token/role)
-        </button>
+          {/* 로그인 버튼 */}
+          <button
+            type="submit"
+            disabled={isLoading}
+            style={{
+              width: '100%',
+              padding: '14px',
+              fontSize: '16px',
+              fontWeight: '600',
+              color: '#FDFDFD',
+              backgroundColor: isLoading ? '#9D9D9D' : '#BF4134',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              transition: 'background-color 0.2s',
+              marginTop: '8px',
+            }}
+            onMouseEnter={(e) => {
+              if (!isLoading) e.currentTarget.style.backgroundColor = '#a63a2e';
+            }}
+            onMouseLeave={(e) => {
+              if (!isLoading) e.currentTarget.style.backgroundColor = '#BF4134';
+            }}
+          >
+            {isLoading ? '로그인 중...' : '로그인'}
+          </button>
+        </form>
+
+        {/* 비밀번호 재발급 / 회원가입 링크 */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '24px',
+            marginTop: '16px',
+            fontSize: '13px',
+          }}
+        >
+          <Link
+            to="/password-reset"
+            style={{
+              color: '#626262',
+              textDecoration: 'none',
+              transition: 'color 0.2s',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = '#BF4134')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = '#626262')}
+          >
+            비밀번호 재발급
+          </Link>
+          <span style={{ color: '#CACACA' }}>|</span>
+          <Link
+            to="/signup"
+            style={{
+              color: '#626262',
+              textDecoration: 'none',
+              transition: 'color 0.2s',
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = '#BF4134')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = '#626262')}
+          >
+            회원가입
+          </Link>
+        </div>
+
+        {/* 구분선 */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+            margin: '40px 0',
+            gap: '16px',
+          }}
+        >
+          <div style={{ flex: 1, height: '1px', backgroundColor: '#EBEBEB' }} />
+          <span style={{ fontSize: '13px', color: '#9D9D9D' }}>또는</span>
+          <div style={{ flex: 1, height: '1px', backgroundColor: '#EBEBEB' }} />
+        </div>
+
+        {/* 소셜 로그인 버튼들 */}
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '12px',
+          }}
+        >
+          {(Object.keys(socialLoginConfig) as SocialProvider[]).map((provider) => {
+            const config = socialLoginConfig[provider];
+            const isHovered = hoveredSocial === provider;
+
+            return (
+              <button
+                key={provider}
+                type="button"
+                onClick={() => handleSocialLogin(provider)}
+                onMouseEnter={() => setHoveredSocial(provider)}
+                onMouseLeave={() => setHoveredSocial(null)}
+                style={{
+                  width: '100%',
+                  padding: '14px 20px',
+                  fontSize: '15px',
+                  fontWeight: '500',
+                  color: config.textColor,
+                  backgroundColor: isHovered ? config.hoverBg : config.bgColor,
+                  border: provider === 'google' ? '1px solid #CACACA' : 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.2s',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                }}
+              >
+                {/* 소셜 아이콘 (간단한 텍스트 아이콘으로 대체) */}
+                <span style={{ fontSize: '18px', fontWeight: '700' }}>
+                  {provider === 'google' && 'G'}
+                  {provider === 'naver' && 'N'}
+                  {provider === 'kakao' && 'K'}
+                </span>
+                {config.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
-
-      <p style={{ marginTop: 12 }}>
-        redirect target: <code>{redirect}</code>
-      </p>
-
-      <ul>
-        <li>로그인 안 된 상태에서 /cart 같은 보호 페이지로 가면 /login?redirect=... 로 올 거야</li>
-        <li>여기서 Login 누르면 원래 페이지로 돌아감</li>
-      </ul>
     </PageShell>
   );
 }
