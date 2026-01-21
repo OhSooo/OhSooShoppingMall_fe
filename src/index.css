@@ -52,6 +52,16 @@ html, body {
   overflow-x: hidden;
 }
 
+/* 전역 스크롤바 숨기기 (스크롤 기능은 유지) */
+* {
+  -ms-overflow-style: none;  /* IE, Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Opera */
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
