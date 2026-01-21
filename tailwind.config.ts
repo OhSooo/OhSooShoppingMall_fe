@@ -20,6 +20,9 @@ export default {
         white: "var(--color-white)",
         black: "var(--color-black)",
       },
+      spacing: {
+        header: "var(--header-h)",
+      },
     },
   },
   plugins: [],

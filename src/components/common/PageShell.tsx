@@ -14,38 +14,94 @@ export default function PageShell({ title, children }: Props) {
   const role = localStorage.getItem('role');
 
   return (
-    <div style={{ padding: 24 }}>
-      <h1>{title}</h1>
+    <div className="mx-auto max-w-6xl px-4 py-6">
+      {/* ===== 페이지 타이틀 ===== */}
+      <h1 className="text-2xl font-semibold">{title}</h1>
 
-      <div style={{ margin: '12px 0' }}>
-        <div>
-          <strong>Path:</strong> <code>{location.pathname}</code>
-        </div>
-        <div>
-          <strong>Token:</strong> <code>{token ? 'EXISTS' : 'NONE'}</code>
-        </div>
-        <div>
-          <strong>Role:</strong> <code>{role || 'NONE'}</code>
-        </div>
-      </div>
-
-      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 16 }}>
-        <button type="button" onClick={() => navigate(-1)}>
+      {/* ===== 라우팅 테스트용 이동 버튼들 ===== */}
+      <div className="mt-4 flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
+        >
           Back
         </button>
-        <Link to="/">Home</Link>
-        <Link to="/list">List</Link>
-        <Link to="/list/search?q=test">Search(test)</Link>
-        <Link to="/store/1">Store(1)</Link>
-        <Link to="/item/1">Item(1)</Link>
-        <Link to="/cart">Cart</Link>
-        <Link to="/mypage/user">MyPage</Link>
-        <Link to="/chat">Chat</Link>
+
+        <Link
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
+          to="/"
+        >
+          Home
+        </Link>
+        <Link
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
+          to="/list"
+        >
+          List
+        </Link>
+        <Link
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
+          to="/list/search?q=test"
+        >
+          Search(test)
+        </Link>
+        <Link
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
+          to="/store/1"
+        >
+          Store(1)
+        </Link>
+        <Link
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
+          to="/item/1"
+        >
+          Item(1)
+        </Link>
+        <Link
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
+          to="/cart"
+        >
+          Cart
+        </Link>
+        <Link
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
+          to="/mypage/user"
+        >
+          MyPage
+        </Link>
+        <Link
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
+          to="/chat"
+        >
+          Chat
+        </Link>
       </div>
 
-      <hr />
+      <hr className="my-6 border-gray-200" />
 
-      <div style={{ marginTop: 16 }}>{children}</div>
+      {/* ===== 실제 페이지 내용 ===== */}
+      <div>{children}</div>
+
+      {/* ===== 우측 하단 Debug HUD (fixed) ===== */}
+      <div className="fixed bottom-4 right-4 z-[60]">
+        <div className="rounded-lg border border-gray-200 bg-white/80 p-3 text-xs shadow-md backdrop-blur">
+          <div className="space-y-1">
+            <div>
+              <strong>Path:</strong>{' '}
+              <code className="rounded bg-gray-100 px-2 py-0.5">{location.pathname}</code>
+            </div>
+            <div>
+              <strong>Token:</strong>{' '}
+              <code className="rounded bg-gray-100 px-2 py-0.5">{token ? 'EXISTS' : 'NONE'}</code>
+            </div>
+            <div>
+              <strong>Role:</strong>{' '}
+              <code className="rounded bg-gray-100 px-2 py-0.5">{role || 'NONE'}</code>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
