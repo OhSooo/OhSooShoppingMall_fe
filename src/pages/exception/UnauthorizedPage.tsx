@@ -6,7 +6,7 @@ export default function UnauthorizedPage() {
   const navigate = useNavigate();
 
   return (
-    <PageShell title="UnauthorizedPage (401/403)">
+    <PageShell>
       <p>로그인은 되어있지만, 접근 권한(role)이 없어서 막힌 페이지입니다.</p>
       <p>
         요청 경로: <code>{location.pathname}</code>

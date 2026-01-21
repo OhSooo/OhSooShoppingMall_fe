@@ -5,7 +5,7 @@ export default function PaymentSuccessPage() {
   const navigate = useNavigate();
 
   return (
-    <PageShell title="PaymentSuccessPage">
+    <PageShell>
       <p>결제 성공 페이지 (로그인 필요)</p>
 
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>

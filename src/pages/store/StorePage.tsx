@@ -5,7 +5,7 @@ export default function StorePage() {
   const { storeId } = useParams();
 
   return (
-    <PageShell title="StorePage">
+    <PageShell>
       <p>
         스토어 페이지 (storeId: <code>{storeId}</code>)
       </p>

@@ -3,7 +3,7 @@ import PageShell from '../../components/common/PageShell';
 
 export default function HomePage() {
   return (
-    <PageShell title="HomePage">
+    <PageShell>
       <p>홈 페이지</p>
 
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>

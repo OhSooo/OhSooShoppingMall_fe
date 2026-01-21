@@ -5,7 +5,7 @@ export default function OrderPage() {
   const navigate = useNavigate();
 
   return (
-    <PageShell title="OrderPage">
+    <PageShell>
       <p>주문 페이지 (로그인 필요)</p>
 
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>

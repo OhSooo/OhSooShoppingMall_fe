@@ -5,7 +5,7 @@ export default function NotFoundPage() {
   const location = useLocation();
 
   return (
-    <PageShell title="NotFoundPage (404)">
+    <PageShell>
       <p>존재하지 않는 경로입니다.</p>
       <p>
         요청 경로: <code>{location.pathname}</code>

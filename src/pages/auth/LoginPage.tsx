@@ -37,7 +37,7 @@ export default function LoginPage() {
   };
 
   return (
-    <PageShell title="LoginPage">
+    <PageShell>
       <p>임시 로그인 페이지 (redirect 복귀 테스트용)</p>
 
       <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>

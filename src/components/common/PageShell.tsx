@@ -1,107 +1,72 @@
 import { ReactNode } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 type Props = {
-  title: string;
   children?: ReactNode;
 };
 
-export default function PageShell({ title, children }: Props) {
+export default function PageShell({ children }: Props) {
   const location = useLocation();
-  const navigate = useNavigate();
 
   const token = localStorage.getItem('accessToken');
   const role = localStorage.getItem('role');
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-6">
-      {/* ===== 페이지 타이틀 ===== */}
-      <h1 className="text-2xl font-semibold">{title}</h1>
-
-      {/* ===== 라우팅 테스트용 이동 버튼들 ===== */}
-      <div className="mt-4 flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
+    <>
+      {/* 본문 컨테이너 - 중앙 정렬 + 빨간 테두리 + 흰 배경 */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          padding: '40px 48px',
+          minHeight: 'calc(100vh - 64px - 96px)', // 전체 높이 - header - footer
+        }}
+      >
+        <div
+          style={{
+            width: '100%',
+            maxWidth: '1000px',
+            backgroundColor: '#FDFDFD',
+            border: '3px solid #BF4134',
+            borderRadius: '3px',
+            padding: '24px 32px',
+            minHeight: '400px',
+          }}
         >
-          Back
-        </button>
-
-        <Link
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
-          to="/"
-        >
-          Home
-        </Link>
-        <Link
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
-          to="/list"
-        >
-          List
-        </Link>
-        <Link
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
-          to="/list/search?q=test"
-        >
-          Search(test)
-        </Link>
-        <Link
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
-          to="/store/1"
-        >
-          Store(1)
-        </Link>
-        <Link
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
-          to="/item/1"
-        >
-          Item(1)
-        </Link>
-        <Link
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
-          to="/cart"
-        >
-          Cart
-        </Link>
-        <Link
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
-          to="/mypage/user"
-        >
-          MyPage
-        </Link>
-        <Link
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
-          to="/chat"
-        >
-          Chat
-        </Link>
-      </div>
-
-      <hr className="my-6 border-gray-200" />
-
-      {/* ===== 실제 페이지 내용 ===== */}
-      <div>{children}</div>
-
-      {/* ===== 우측 하단 Debug HUD (fixed) ===== */}
-      <div className="fixed bottom-4 right-4 z-[60]">
-        <div className="rounded-lg border border-gray-200 bg-white/80 p-3 text-xs shadow-md backdrop-blur">
-          <div className="space-y-1">
-            <div>
-              <strong>Path:</strong>{' '}
-              <code className="rounded bg-gray-100 px-2 py-0.5">{location.pathname}</code>
-            </div>
-            <div>
-              <strong>Token:</strong>{' '}
-              <code className="rounded bg-gray-100 px-2 py-0.5">{token ? 'EXISTS' : 'NONE'}</code>
-            </div>
-            <div>
-              <strong>Role:</strong>{' '}
-              <code className="rounded bg-gray-100 px-2 py-0.5">{role || 'NONE'}</code>
-            </div>
-          </div>
+          {children}
         </div>
       </div>
-    </div>
+
+      {/* 우측 하단 Debug HUD (fixed) */}
+      <div
+        style={{
+          position: 'fixed',
+          bottom: '16px',
+          right: '16px',
+          zIndex: 99999,
+          backgroundColor: 'rgba(0, 0, 0, 0.75)',
+          color: '#fff',
+          padding: '12px 16px',
+          borderRadius: '8px',
+          fontSize: '12px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+        }}
+      >
+        <div style={{ marginBottom: '4px' }}>
+          <span style={{ color: '#9D9D9D' }}>Page:</span>{' '}
+          <code style={{ color: '#E6E5E3' }}>{location.pathname}</code>
+        </div>
+        <div style={{ marginBottom: '4px' }}>
+          <span style={{ color: '#9D9D9D' }}>Token:</span>{' '}
+          <code style={{ color: token ? '#4ade80' : '#f87171' }}>
+            {token ? 'EXISTS' : 'NONE'}
+          </code>
+        </div>
+        <div>
+          <span style={{ color: '#9D9D9D' }}>Role:</span>{' '}
+          <code style={{ color: '#E6E5E3' }}>{role || 'NONE'}</code>
+        </div>
+      </div>
+    </>
   );
 }

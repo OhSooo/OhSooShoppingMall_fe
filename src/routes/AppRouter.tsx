@@ -124,13 +124,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       // ----------------------------
-      // 레이아웃 없는 페이지
-      // ----------------------------
-      { path: '/login', element: <LoginPage /> },
-      { path: '/unauthorized', element: <UnauthorizedPage /> },
-
-      // ----------------------------
-      // MainLayout 적용
+      // MainLayout 적용 (모든 페이지에 Header/Footer 적용)
       // ----------------------------
       {
         path: '/',
@@ -139,6 +133,10 @@ const router = createBrowserRouter([
         children: [
           // 홈
           { index: true, element: <HomePage /> },
+
+          // 로그인 / 권한 없음 페이지도 레이아웃 안에
+          { path: 'login', element: <LoginPage /> },
+          { path: 'unauthorized', element: <UnauthorizedPage /> },
 
           // 목록 / 검색
           { path: 'list', element: <AllListPage /> },
@@ -202,9 +200,6 @@ const router = createBrowserRouter([
           { path: '*', element: <NotFoundPage /> },
         ],
       },
-
-      // 전체 레벨 404
-      { path: '*', element: <NotFoundPage /> },
     ],
   },
 ]);

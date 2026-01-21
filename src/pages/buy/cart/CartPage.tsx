@@ -5,7 +5,7 @@ export default function CartPage() {
   const navigate = useNavigate();
 
   return (
-    <PageShell title="CartPage">
+    <PageShell>
       <p>장바구니 페이지 (로그인 필요)</p>
 
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>

@@ -6,7 +6,7 @@ export default function ItemPage() {
   const navigate = useNavigate();
 
   return (
-    <PageShell title="ItemPage">
+    <PageShell>
       <p>
         상품 상세 페이지 (itemId: <code>{itemId}</code>)
       </p>

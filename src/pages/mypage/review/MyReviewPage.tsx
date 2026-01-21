@@ -3,7 +3,7 @@ import PageShell from '../../../components/common/PageShell';
 
 export default function MyReviewPage() {
   return (
-    <PageShell title="MyReviewPage">
+    <PageShell>
       <p>마이페이지 - 작성 리뷰 (로그인 필요)</p>
 
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>

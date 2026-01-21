@@ -1,9 +1,15 @@
 export default function Footer() {
   return (
-    <footer className="mt-10 border-t border-gray-200 bg-white">
-      <div className="mx-auto max-w-6xl px-4 py-6 text-sm text-gray-500">
-        <span>© Mall</span>
-      </div>
+    <footer
+      style={{
+        width: '100%',
+        backgroundColor: '#BF4134',
+        padding: '32px 48px',
+      }}
+    >
+      <span style={{ fontSize: '14px', color: '#FDFDFD' }}>
+        © 2026 Mall. All rights reserved.
+      </span>
     </footer>
   );
 }

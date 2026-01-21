@@ -3,7 +3,7 @@ import PageShell from '../../../components/common/PageShell';
 
 export default function MyOrderPage() {
   return (
-    <PageShell title="MyOrderPage">
+    <PageShell>
       <p>마이페이지 - 주문 내역 (로그인 필요)</p>
 
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>

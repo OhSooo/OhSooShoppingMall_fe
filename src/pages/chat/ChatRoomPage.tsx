@@ -5,7 +5,7 @@ export default function ChatRoomPage() {
   const { roomId } = useParams();
 
   return (
-    <PageShell title="ChatRoomPage">
+    <PageShell>
       <p>
         채팅방 페이지 (roomId: <code>{roomId}</code>) (로그인 필요)
       </p>

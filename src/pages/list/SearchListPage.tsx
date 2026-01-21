@@ -6,7 +6,7 @@ export default function SearchListPage() {
   const q = params.get('q') || '';
 
   return (
-    <PageShell title="SearchListPage">
+    <PageShell>
       <p>검색 결과 페이지</p>
       <p>
         query: <code>{q || '(empty)'}</code>

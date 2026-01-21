@@ -6,7 +6,7 @@ export default function ErrorPage() {
 
   if (isRouteErrorResponse(error)) {
     return (
-      <PageShell title="ErrorPage (Route Error)">
+      <PageShell>
         <p>
           status: <code>{error.status}</code>
         </p>
@@ -22,7 +22,7 @@ export default function ErrorPage() {
   }
 
   return (
-    <PageShell title="ErrorPage (Unknown Error)">
+    <PageShell>
       <p>
         message: <code>{error instanceof Error ? error.message : String(error)}</code>
       </p>

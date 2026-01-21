@@ -3,7 +3,7 @@ import PageShell from '../../components/common/PageShell';
 
 export default function AllListPage() {
   return (
-    <PageShell title="AllListPage">
+    <PageShell>
       <p>전체 목록 페이지</p>
 
       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
