@@ -3,6 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import PageShell from '../../components/common/PageShell';
 import { loginLocal } from '../../services/auth/loginService';
 import PasswordInput from '../../components/common/PasswordInput';
+import { API_BASE_URL } from '../../api/config';
 
 // 소셜 로그인 Provider 타입
 type SocialProvider = 'google' | 'naver' | 'kakao';
@@ -85,14 +86,8 @@ export default function LoginPage() {
 
   // 소셜 로그인 처리
   const handleSocialLogin = (provider: SocialProvider) => {
-    // TODO: 실제 소셜 로그인 URL로 이동
-    const socialLoginUrls: Record<SocialProvider, string> = {
-      google: `${import.meta.env.VITE_API_BASE_URL || ''}/oauth2/authorization/google`,
-      naver: `${import.meta.env.VITE_API_BASE_URL || ''}/oauth2/authorization/naver`,
-      kakao: `${import.meta.env.VITE_API_BASE_URL || ''}/oauth2/authorization/kakao`,
-    };
-
-    window.location.href = socialLoginUrls[provider];
+    // 백엔드 OAuth2 인증 URL로 이동
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/${provider}`;
   };
 
   return (

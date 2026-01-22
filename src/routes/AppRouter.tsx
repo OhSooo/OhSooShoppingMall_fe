@@ -15,6 +15,8 @@ import SignupPage from '@/pages/auth/signup/SignupPage';
 import WelcomePage from '@/pages/auth/signup/WelcomePage';
 import PasswordResetPage from '@/pages/auth/password/PasswordResetPage';
 import PasswordResetedPage from '@/pages/auth/password/PasswordResetedPage';
+import OAuthCallbackPage from '@/pages/auth/OAuthCallbackPage';
+import OnboardingPage from '@/pages/auth/OnboardingPage';
 import HomePage from '@/pages/home/HomePage';
 
 import AllListPage from '@/pages/list/AllListPage';
@@ -146,6 +148,7 @@ const router = createBrowserRouter([
           { path: 'signup/welcome', element: <WelcomePage /> },
           { path: 'password-reset', element: <PasswordResetPage /> },
           { path: 'password-reset/success', element: <PasswordResetedPage /> },
+          { path: 'oauth/callback', element: <OAuthCallbackPage /> },
           { path: 'unauthorized', element: <UnauthorizedPage /> },
 
           // 목록 / 검색
@@ -162,6 +165,9 @@ const router = createBrowserRouter([
           {
             element: <RequireAuth />,
             children: [
+              // 온보딩 페이지 (소셜 로그인 첫 사용자용)
+              { path: 'onboarding', element: <OnboardingPage /> },
+              
               // 마이페이지
               { path: 'mypage', element: <MyPage /> },
               { path: 'mypage/user', element: <MyInfoManagePage /> },
