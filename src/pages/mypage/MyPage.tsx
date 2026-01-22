@@ -1,7 +1,11 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import PageShell from '../../components/common/PageShell';
+import { logout } from '../../services/auth/loginService';
 
 export default function MyPage() {
+  const navigate = useNavigate();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   return (
     <PageShell>
       <div
@@ -166,6 +170,76 @@ export default function MyPage() {
               </svg>
             </div>
           </Link>
+        </div>
+
+        {/* 로그아웃 버튼 */}
+        <div
+          style={{
+            marginTop: '24px',
+            paddingTop: '24px',
+            borderTop: '1px solid var(--color-gray-1)',
+          }}
+        >
+          <button
+            type="button"
+            onClick={async () => {
+              if (isLoggingOut) return;
+              
+              setIsLoggingOut(true);
+              try {
+                await logout();
+                navigate('/', { replace: true });
+              } catch (error) {
+                console.error('로그아웃 실패:', error);
+                alert('로그아웃에 실패했습니다. 다시 시도해주세요.');
+              } finally {
+                setIsLoggingOut(false);
+              }
+            }}
+            disabled={isLoggingOut}
+            style={{
+              width: '100%',
+              padding: '14px',
+              fontSize: '16px',
+              fontWeight: '600',
+              color: 'var(--color-white)',
+              backgroundColor: isLoggingOut ? 'var(--color-gray-3)' : 'var(--color-gray-4)',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: isLoggingOut ? 'not-allowed' : 'pointer',
+              transition: 'background-color 0.2s',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+            }}
+            onMouseEnter={(e) => {
+              if (!isLoggingOut) {
+                e.currentTarget.style.backgroundColor = 'var(--color-gray-5)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isLoggingOut) {
+                e.currentTarget.style.backgroundColor = 'var(--color-gray-4)';
+              }
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              style={{ width: '18px', height: '18px' }}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              />
+            </svg>
+            {isLoggingOut ? '로그아웃 중...' : '로그아웃'}
+          </button>
         </div>
       </div>
     </PageShell>
