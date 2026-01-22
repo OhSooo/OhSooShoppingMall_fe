@@ -1,8 +1,12 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import PageShell from '../../../components/common/PageShell';
 
 export default function WelcomePage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // 회원가입 성공 시 전달된 name 가져오기
+  const name = (location.state as { name?: string })?.name || '';
 
   const handleGoHome = () => {
     navigate('/');
@@ -53,7 +57,7 @@ export default function WelcomePage() {
             textAlign: 'center',
           }}
         >
-          회원가입이 완료되었습니다!
+          {name ? `${name}님, ` : ''}회원가입이 완료되었습니다!
         </h1>
 
         <p

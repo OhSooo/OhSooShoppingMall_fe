@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAppDispatch } from '../../../store/hooks';
+import { resetSignupData } from '../../../store/signupSlice';
 import PageShell from '../../../components/common/PageShell';
 import SignupPage_Email from './SignupPage_Email';
 import SignupPage_Password from './SignupPage_Password';
@@ -7,7 +9,18 @@ import SignupPage_UserInfo from './SignupPage_UserInfo';
 type SignupStep = 1 | 2 | 3;
 
 export default function SignupPage() {
+  const dispatch = useAppDispatch();
   const [currentStep, setCurrentStep] = useState<SignupStep>(1);
+
+  // 페이지 진입 시 store 초기화
+  useEffect(() => {
+    dispatch(resetSignupData());
+    
+    // 페이지 이탈 시에도 초기화
+    return () => {
+      dispatch(resetSignupData());
+    };
+  }, [dispatch]);
 
   const steps = [
     { number: 1, label: '이메일 인증' },

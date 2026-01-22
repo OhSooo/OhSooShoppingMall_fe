@@ -10,6 +10,14 @@ import {
   resetSignupData,
   type Gender,
 } from '../../../store/signupSlice';
+import { submitSignup } from '../../../services/auth/signupService';
+import { ApiError } from '../../../api/config';
+import {
+  validateName,
+  validateBirth,
+  validatePhone,
+  validateAddress,
+} from '../../../utils/validation';
 
 type Props = {
   onPrev: () => void;
@@ -18,7 +26,7 @@ type Props = {
 export default function SignupPage_UserInfo({ onPrev }: Props) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { name, birth, gender, phone, address } = useAppSelector(
+  const { email, password, name, birth, gender, phone, address } = useAppSelector(
     (state) => state.signup
   );
 
@@ -26,66 +34,33 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
   const [birthError, setBirthError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [addressError, setAddressError] = useState('');
-
-  const validateName = (value: string): string => {
-    if (!value) {
-      return '이름을 입력해주세요.';
-    }
-    if (value.length < 2) {
-      return '이름은 2자 이상이어야 합니다.';
-    }
-    return '';
-  };
-
-  const validateBirth = (value: string): string => {
-    if (!value) {
-      return '생년월일을 입력해주세요.';
-    }
-    // YYYY-MM-DD 형식 검사
-    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-    if (!dateRegex.test(value)) {
-      return '올바른 날짜 형식(YYYY-MM-DD)을 입력해주세요.';
-    }
-    return '';
-  };
-
-  const validatePhone = (value: string): string => {
-    if (!value) {
-      return '전화번호를 입력해주세요.';
-    }
-    // 전화번호 형식 검사 (010-1234-5678 또는 01012345678)
-    const phoneRegex = /^01[0-9]-?\d{3,4}-?\d{4}$/;
-    if (!phoneRegex.test(value.replace(/-/g, ''))) {
-      return '올바른 전화번호 형식을 입력해주세요.';
-    }
-    return '';
-  };
-
-  const validateAddress = (value: string): string => {
-    if (!value) {
-      return '주소를 입력해주세요.';
-    }
-    return '';
-  };
+  const [isLoading, setIsLoading] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   const handleNameChange = (value: string) => {
     dispatch(setName(value));
-    setNameError(validateName(value));
+    const validation = validateName(value);
+    setNameError(validation.message);
   };
 
   const handleBirthChange = (value: string) => {
     dispatch(setBirth(value));
-    setBirthError(validateBirth(value));
+    const validation = validateBirth(value);
+    setBirthError(validation.message);
   };
 
   const handlePhoneChange = (value: string) => {
-    dispatch(setPhone(value));
-    setPhoneError(validatePhone(value));
+    // 숫자만 입력받기
+    const numbersOnly = value.replace(/\D/g, '');
+    dispatch(setPhone(numbersOnly));
+    const validation = validatePhone(numbersOnly);
+    setPhoneError(validation.message);
   };
 
   const handleAddressChange = (value: string) => {
     dispatch(setAddress(value));
-    setAddressError(validateAddress(value));
+    const validation = validateAddress(value);
+    setAddressError(validation.message);
   };
 
   const isFormValid = () => {
@@ -101,23 +76,51 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
     );
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // 모든 필드 검증
-    const nameErr = validateName(name);
-    const birthErr = validateBirth(birth);
-    const phoneErr = validatePhone(phone);
-    const addressErr = validateAddress(address);
+    const nameValidation = validateName(name);
+    const birthValidation = validateBirth(birth);
+    const phoneValidation = validatePhone(phone);
+    const addressValidation = validateAddress(address);
 
-    setNameError(nameErr);
-    setBirthError(birthErr);
-    setPhoneError(phoneErr);
-    setAddressError(addressErr);
+    setNameError(nameValidation.message);
+    setBirthError(birthValidation.message);
+    setPhoneError(phoneValidation.message);
+    setAddressError(addressValidation.message);
 
-    if (!nameErr && !birthErr && !phoneErr && !addressErr) {
-      // TODO: 실제 회원가입 API 호출
-      // 회원가입 성공 후 welcome 페이지로 이동
-      // dispatch(resetSignupData()); // 필요시 데이터 초기화
-      navigate('/signup/welcome');
+    if (
+      nameValidation.isValid &&
+      birthValidation.isValid &&
+      phoneValidation.isValid &&
+      addressValidation.isValid
+    ) {
+      setIsLoading(true);
+      setSubmitError('');
+
+      try {
+        const result = await submitSignup({
+          email,
+          password,
+          name,
+          birth,
+          gender,
+          phone,
+          address,
+        });
+
+        // 회원가입 성공 후 데이터 초기화
+        dispatch(resetSignupData());
+        // WelcomePage에 name 전달
+        navigate('/signup/welcome', { state: { name: result.name } });
+      } catch (error) {
+        if (error instanceof ApiError) {
+          setSubmitError(error.message || '회원가입에 실패했습니다.');
+        } else {
+          setSubmitError('회원가입에 실패했습니다. 다시 시도해주세요.');
+        }
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -146,7 +149,7 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
           type="text"
           value={name}
           onChange={(e) => handleNameChange(e.target.value)}
-          placeholder="이름을 입력하세요"
+          placeholder="이름을 입력하세요 (2자 이상)"
           style={{
             width: '100%',
             padding: '12px 16px',
@@ -293,7 +296,7 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
           type="tel"
           value={phone}
           onChange={(e) => handlePhoneChange(e.target.value)}
-          placeholder="010-1234-5678"
+          placeholder="전화번호를 입력하세요 (숫자만, 예: 01012345678)"
           style={{
             width: '100%',
             padding: '12px 16px',
@@ -340,7 +343,7 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
           type="text"
           value={address}
           onChange={(e) => handleAddressChange(e.target.value)}
-          placeholder="주소를 입력하세요"
+          placeholder="주소를 입력하세요 (예: 서울시 강남구 테헤란로 123)"
           style={{
             width: '100%',
             padding: '12px 16px',
@@ -405,29 +408,41 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
         <button
           type="button"
           onClick={handleSubmit}
-          disabled={!isFormValid()}
+          disabled={!isFormValid() || isLoading}
           style={{
             flex: 1,
             padding: '14px',
             fontSize: '16px',
             fontWeight: '600',
             color: 'var(--color-white)',
-            backgroundColor: isFormValid() ? 'var(--color-point-main)' : '#9D9D9D',
+            backgroundColor: isFormValid() && !isLoading ? 'var(--color-point-main)' : '#9D9D9D',
             border: 'none',
             borderRadius: '6px',
-            cursor: isFormValid() ? 'pointer' : 'not-allowed',
+            cursor: isFormValid() && !isLoading ? 'pointer' : 'not-allowed',
             transition: 'background-color 0.2s',
           }}
           onMouseEnter={(e) => {
-            if (isFormValid()) e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
+            if (isFormValid() && !isLoading) e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
           }}
           onMouseLeave={(e) => {
-            if (isFormValid()) e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
+            if (isFormValid() && !isLoading) e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
           }}
         >
-          가입하기
+          {isLoading ? '가입 중...' : '가입하기'}
         </button>
       </div>
+      {submitError && (
+        <div
+          style={{
+            fontSize: '13px',
+            color: 'var(--color-point-main)',
+            textAlign: 'center',
+            marginTop: '8px',
+          }}
+        >
+          {submitError}
+        </div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import {
   setEmail,
@@ -6,6 +6,9 @@ import {
   setCodeSent,
   setCodeVerified,
 } from '../../../store/signupSlice';
+import { sendVerificationCode, verifyCode } from '../../../services/auth/signupService';
+import { ApiError } from '../../../api/config';
+import { validateEmail, validateVerificationCode } from '../../../utils/validation';
 
 type Props = {
   onNext: () => void;
@@ -18,39 +21,127 @@ export default function SignupPage_Email({ onNext }: Props) {
   );
 
   const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [emailSuccessMessage, setEmailSuccessMessage] = useState('');
+  const [emailErrorMessage, setEmailErrorMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleSendCode = () => {
-    if (!email) {
-      setErrorMessage('이메일을 입력해주세요.');
+  // 타이머 효과
+  useEffect(() => {
+    if (timeLeft !== null && timeLeft > 0) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev === null || prev <= 1) {
+            if (timerRef.current) {
+              clearInterval(timerRef.current);
+            }
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } else if (timeLeft === 0) {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      // 타이머 만료 시 인증 상태 초기화
+      dispatch(setCodeVerified(false));
+      setErrorMessage('인증번호 유효 시간이 만료되었습니다. 다시 전송해주세요.');
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [timeLeft, dispatch]);
+
+  const handleSendCode = async () => {
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.isValid) {
+      setEmailErrorMessage(emailValidation.message);
+      setEmailSuccessMessage('');
       return;
     }
 
-    // 간단한 이메일 형식 검사
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setErrorMessage('올바른 이메일 형식을 입력해주세요.');
-      return;
-    }
-
-    // TODO: 실제 API 호출
-    dispatch(setCodeSent(true));
+    setIsLoading(true);
+    setEmailErrorMessage('');
+    setEmailSuccessMessage('');
     setErrorMessage('');
+    setSuccessMessage('');
+
+    try {
+      const result = await sendVerificationCode(email);
+      dispatch(setCodeSent(true));
+      setEmailSuccessMessage('인증번호가 전송되었습니다.');
+      // 타이머 시작
+      setTimeLeft(result.expiresInSeconds);
+      // 인증 상태 초기화 (재전송 시)
+      dispatch(setCodeVerified(false));
+      dispatch(setVerificationCode(''));
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setEmailErrorMessage(error.message || '인증번호 발송에 실패했습니다.');
+      } else {
+        setEmailErrorMessage('인증번호 발송에 실패했습니다. 다시 시도해주세요.');
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleVerifyCode = () => {
-    if (!verificationCode) {
-      setErrorMessage('인증번호를 입력해주세요.');
+  const handleVerifyCode = async () => {
+    // 타이머 만료 체크
+    if (timeLeft === 0) {
+      setErrorMessage('인증번호 유효 시간이 만료되었습니다. 다시 전송해주세요.');
       return;
     }
 
-    // 간단한 검증 (실제로는 서버에서 확인)
-    // 여기서는 6자리 숫자면 통과로 가정
-    if (verificationCode.length === 6 && /^\d+$/.test(verificationCode)) {
-      dispatch(setCodeVerified(true));
-      setErrorMessage('');
-    } else {
-      setErrorMessage('인증번호가 올바르지 않거나 만료되었습니다.');
+    const codeValidation = validateVerificationCode(verificationCode);
+    if (!codeValidation.isValid) {
+      setErrorMessage(codeValidation.message);
+      setSuccessMessage('');
+      return;
     }
+
+    setIsLoading(true);
+    setErrorMessage('');
+    setSuccessMessage('');
+
+    try {
+      const result = await verifyCode(email, verificationCode);
+      if (result.verified) {
+        dispatch(setCodeVerified(true));
+        setSuccessMessage('인증번호가 확인되었습니다.');
+        setErrorMessage('');
+        // 타이머 정지
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+        setTimeLeft(null);
+      } else {
+        setErrorMessage('인증번호가 올바르지 않습니다.');
+        setSuccessMessage('');
+      }
+    } catch (error) {
+      if (error instanceof ApiError) {
+        setErrorMessage(error.message || '인증번호 확인에 실패했습니다.');
+      } else {
+        setErrorMessage('인증번호 확인에 실패했습니다. 다시 시도해주세요.');
+      }
+      setSuccessMessage('');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // 시간 포맷팅 (MM:SS)
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
   };
 
   const handleNext = () => {
@@ -86,65 +177,126 @@ export default function SignupPage_Email({ onNext }: Props) {
             value={email}
             onChange={(e) => {
               dispatch(setEmail(e.target.value));
-              setErrorMessage('');
+              setEmailErrorMessage('');
+              setEmailSuccessMessage('');
+              // 이메일 변경 시 인증 상태 초기화
+              if (isCodeSent) {
+                dispatch(setCodeSent(false));
+                dispatch(setCodeVerified(false));
+                dispatch(setVerificationCode(''));
+                setTimeLeft(null);
+                setErrorMessage('');
+                setSuccessMessage('');
+              }
             }}
-            placeholder="example@email.com"
-            disabled={isCodeSent}
+            placeholder="이메일을 입력하세요 (예: example@email.com)"
             style={{
               flex: 1,
               padding: '12px 16px',
               fontSize: '15px',
-              border: '1px solid #CACACA',
+              border: emailErrorMessage
+                ? '1px solid var(--color-point-main)'
+                : '1px solid #CACACA',
               borderRadius: '6px',
               outline: 'none',
               transition: 'border-color 0.2s',
-              backgroundColor: isCodeSent ? 'var(--color-gray-0)' : 'var(--color-white)',
+              backgroundColor: 'var(--color-white)',
             }}
             onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
-            onBlur={(e) => (e.target.style.borderColor = '#CACACA')}
+            onBlur={(e) => {
+              if (!emailErrorMessage) e.target.style.borderColor = '#CACACA';
+            }}
           />
           <button
             type="button"
             onClick={handleSendCode}
-            disabled={isCodeSent}
+            disabled={isLoading}
             style={{
               padding: '12px 24px',
               fontSize: '15px',
               fontWeight: '500',
               color: 'var(--color-white)',
-              backgroundColor: isCodeSent ? '#9D9D9D' : 'var(--color-point-main)',
+              backgroundColor: isLoading ? '#9D9D9D' : 'var(--color-point-main)',
               border: 'none',
               borderRadius: '6px',
-              cursor: isCodeSent ? 'not-allowed' : 'pointer',
+              cursor: isLoading ? 'not-allowed' : 'pointer',
               transition: 'background-color 0.2s',
               whiteSpace: 'nowrap',
             }}
             onMouseEnter={(e) => {
-              if (!isCodeSent) e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
+              if (!isLoading) e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
             }}
             onMouseLeave={(e) => {
-              if (!isCodeSent) e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
+              if (!isLoading) e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
             }}
           >
-            {isCodeSent ? '전송 완료' : '전송'}
+            {isLoading ? '전송 중...' : isCodeSent ? '재전송' : '전송'}
           </button>
         </div>
-        <div style={{ minHeight: '18px' }}></div>
+        {emailSuccessMessage && (
+          <div
+            style={{
+              fontSize: '13px',
+              color: '#28a745',
+              minHeight: '18px',
+            }}
+          >
+            {emailSuccessMessage}
+          </div>
+        )}
+        {emailErrorMessage && (
+          <div
+            style={{
+              fontSize: '13px',
+              color: 'var(--color-point-main)',
+              minHeight: '18px',
+            }}
+          >
+            {emailErrorMessage}
+          </div>
+        )}
+        {!emailSuccessMessage && !emailErrorMessage && (
+          <div style={{ minHeight: '18px' }}></div>
+        )}
       </div>
 
       {/* 인증번호 입력 */}
       {isCodeSent && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <label
-            htmlFor="verificationCode"
-            style={{
-              fontSize: '14px',
-              fontWeight: '500',
-              color: 'var(--color-gray-5)',
-            }}
-          >
-            인증번호
-          </label>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <label
+              htmlFor="verificationCode"
+              style={{
+                fontSize: '14px',
+                fontWeight: '500',
+                color: 'var(--color-gray-5)',
+              }}
+            >
+              인증번호
+            </label>
+            {timeLeft !== null && timeLeft > 0 && (
+              <span
+                style={{
+                  fontSize: '13px',
+                  color: timeLeft <= 60 ? 'var(--color-point-main)' : '#666',
+                  fontWeight: '500',
+                }}
+              >
+                {formatTime(timeLeft)}
+              </span>
+            )}
+            {timeLeft === 0 && (
+              <span
+                style={{
+                  fontSize: '13px',
+                  color: 'var(--color-point-main)',
+                  fontWeight: '500',
+                }}
+              >
+                만료됨
+              </span>
+            )}
+          </div>
           <div style={{ display: 'flex', gap: '8px' }}>
             <input
               id="verificationCode"
@@ -161,9 +313,12 @@ export default function SignupPage_Email({ onNext }: Props) {
                 flex: 1,
                 padding: '12px 16px',
                 fontSize: '15px',
-                border: errorMessage
-                  ? '1px solid var(--color-point-main)'
-                  : '1px solid #CACACA',
+                border:
+                  errorMessage || timeLeft === 0
+                    ? '1px solid var(--color-point-main)'
+                    : successMessage
+                    ? '1px solid #28a745'
+                    : '1px solid #CACACA',
                 borderRadius: '6px',
                 outline: 'none',
                 transition: 'border-color 0.2s',
@@ -171,34 +326,52 @@ export default function SignupPage_Email({ onNext }: Props) {
               }}
               onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
               onBlur={(e) => {
-                if (!errorMessage) e.target.style.borderColor = '#CACACA';
+                if (!errorMessage && !successMessage && timeLeft !== 0) {
+                  e.target.style.borderColor = '#CACACA';
+                }
               }}
             />
             <button
               type="button"
               onClick={handleVerifyCode}
+              disabled={isLoading || timeLeft === 0}
               style={{
                 padding: '12px 24px',
                 fontSize: '15px',
                 fontWeight: '500',
                 color: 'var(--color-white)',
-                backgroundColor: 'var(--color-point-main)',
+                backgroundColor: isLoading || timeLeft === 0 ? '#9D9D9D' : 'var(--color-point-main)',
                 border: 'none',
                 borderRadius: '6px',
-                cursor: 'pointer',
+                cursor: isLoading || timeLeft === 0 ? 'not-allowed' : 'pointer',
                 transition: 'background-color 0.2s',
                 whiteSpace: 'nowrap',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
+                if (!isLoading && timeLeft !== 0) {
+                  e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
+                }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
+                if (!isLoading && timeLeft !== 0) {
+                  e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
+                }
               }}
             >
-              확인
+              {isLoading ? '확인 중...' : timeLeft === 0 ? '만료됨' : '확인'}
             </button>
           </div>
+          {successMessage && (
+            <div
+              style={{
+                fontSize: '13px',
+                color: '#28a745',
+                minHeight: '18px',
+              }}
+            >
+              {successMessage}
+            </div>
+          )}
           {errorMessage && (
             <div
               style={{
@@ -210,7 +383,9 @@ export default function SignupPage_Email({ onNext }: Props) {
               {errorMessage}
             </div>
           )}
-          {!errorMessage && <div style={{ minHeight: '18px' }}></div>}
+          {!successMessage && !errorMessage && (
+            <div style={{ minHeight: '18px' }}></div>
+          )}
         </div>
       )}
 
