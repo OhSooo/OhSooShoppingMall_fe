@@ -71,7 +71,7 @@ function RootWrapper() {
  * auth helpers (임시 localStorage 버전)
  * - 나중에 Redux selector로 교체
  */
-type UserRole = 'USER' | 'STORE_OWNER' | 'ADMIN';
+type UserRole = 'GENERAL' | 'OWNER' | 'ADMIN';
 
 function isLoggedIn(): boolean {
   return Boolean(localStorage.getItem('accessToken'));
@@ -79,7 +79,7 @@ function isLoggedIn(): boolean {
 
 function getRole(): UserRole | null {
   const role = localStorage.getItem('role');
-  if (role === 'USER' || role === 'STORE_OWNER' || role === 'ADMIN') return role;
+  if (role === 'GENERAL' || role === 'OWNER' || role === 'ADMIN') return role;
   return null;
 }
 
@@ -160,7 +160,7 @@ const router = createBrowserRouter([
           { path: 'item/:itemId', element: <ItemPage /> },
 
           // ----------------------------
-          // 로그인 필요한 구간 (USER/STORE_OWNER/ADMIN 모두 가능)
+          // 로그인 필요한 구간 (GENERAL/OWNER/ADMIN 모두 가능)
           // ----------------------------
           {
             element: <RequireAuth />,
@@ -195,7 +195,7 @@ const router = createBrowserRouter([
           // 예: "store/manage" 같은 페이지 생기면 여기 넣기
           // ----------------------------
           {
-            element: <RequireRole allowedRoles={['STORE_OWNER']} />,
+            element: <RequireRole allowedRoles={['OWNER']} />,
             children: [
               // TODO: 스토어 오너 전용 페이지 생기면 여기에 추가
               // { path: "owner/dashboard", element: <OwnerDashboardPage /> },

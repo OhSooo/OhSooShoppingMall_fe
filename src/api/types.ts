@@ -99,6 +99,6 @@ export interface UserMeResponse {
   gender: 'MALE' | 'FEMALE' | 'OTHER';
   phone: string;
   address: string;
-  role: 'USER' | 'STORE_OWNER' | 'ADMIN';
+  role: 'GENERAL' | 'OWNER' | 'ADMIN';
   onboarded: boolean;
 }
