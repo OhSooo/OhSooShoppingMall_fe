@@ -57,3 +57,14 @@ export interface AccessTokenResponse {
   tokenType: string;
   expiresIn: number; // 만료 시간(초)
 }
+
+// 비밀번호 재발급 Request
+export interface PasswordResetRequest {
+  email: string;
+}
+
+// 비밀번호 재발급 Response
+export interface PasswordResetResponse {
+  accepted: boolean;
+  email: string;
+}

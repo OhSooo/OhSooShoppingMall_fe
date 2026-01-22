@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageShell from '../../../components/common/PageShell';
+import { resetPassword } from '../../../api/auth/password/passwordApi';
+import { ApiError } from '../../../api/config';
 
 export default function PasswordResetPage() {
   const navigate = useNavigate();
@@ -27,18 +29,22 @@ export default function PasswordResetPage() {
     setErrorMessage('');
 
     try {
-      // TODO: 실제 API 호출
-      // const response = await passwordResetApi({ email });
-      // if (response.success) {
-      //   navigate('/password-reset/success', { state: { email } });
-      // }
-
-      // 임시 처리: 성공 페이지로 이동
-      setTimeout(() => {
-        navigate('/password-reset/success', { state: { email } });
-      }, 500);
+      const response = await resetPassword({ email });
+      
+      if (response.success && response.data) {
+        // 성공 페이지로 이동 (이메일 정보 전달)
+        navigate('/password-reset/success', { state: { email: response.data.email } });
+      } else {
+        setErrorMessage('임시 비밀번호 발급에 실패했습니다. 다시 시도해주세요.');
+        setIsLoading(false);
+      }
     } catch (error) {
-      setErrorMessage('임시 비밀번호 발급에 실패했습니다. 다시 시도해주세요.');
+      // 에러 처리
+      if (error instanceof ApiError) {
+        setErrorMessage(error.message || '임시 비밀번호 발급에 실패했습니다. 다시 시도해주세요.');
+      } else {
+        setErrorMessage('임시 비밀번호 발급에 실패했습니다. 다시 시도해주세요.');
+      }
       setIsLoading(false);
     }
   };
