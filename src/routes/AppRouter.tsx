@@ -13,6 +13,8 @@ import MainLayout from '@/layouts/MainLayout';
 import LoginPage from '@/pages/auth/LoginPage';
 import SignupPage from '@/pages/auth/signup/SignupPage';
 import WelcomePage from '@/pages/auth/signup/WelcomePage';
+import PasswordResetPage from '@/pages/auth/password/PasswordResetPage';
+import PasswordResetedPage from '@/pages/auth/password/PasswordResetedPage';
 import HomePage from '@/pages/home/HomePage';
 
 import AllListPage from '@/pages/list/AllListPage';
@@ -140,6 +142,8 @@ const router = createBrowserRouter([
           { path: 'login', element: <LoginPage /> },
           { path: 'signup', element: <SignupPage /> },
           { path: 'signup/welcome', element: <WelcomePage /> },
+          { path: 'password-reset', element: <PasswordResetPage /> },
+          { path: 'password-reset/success', element: <PasswordResetedPage /> },
           { path: 'unauthorized', element: <UnauthorizedPage /> },
 
           // 목록 / 검색
