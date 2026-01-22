@@ -30,8 +30,8 @@ export default function WelcomePage() {
             width: '80px',
             height: '80px',
             borderRadius: '50%',
-            backgroundColor: '#BF4134',
-            color: '#FDFDFD',
+            backgroundColor: 'var(--color-point-main)',
+            color: 'var(--color-white)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -48,7 +48,7 @@ export default function WelcomePage() {
           style={{
             fontSize: '28px',
             fontWeight: '700',
-            color: '#1B1B1B',
+            color: 'var(--color-black)',
             marginBottom: '16px',
             textAlign: 'center',
           }}
@@ -59,7 +59,7 @@ export default function WelcomePage() {
         <p
           style={{
             fontSize: '16px',
-            color: '#626262',
+            color: 'var(--color-gray-4)',
             marginBottom: '40px',
             textAlign: 'center',
             lineHeight: '1.6',
@@ -86,18 +86,18 @@ export default function WelcomePage() {
               padding: '14px',
               fontSize: '16px',
               fontWeight: '600',
-              color: '#626262',
-              backgroundColor: '#F5F5F5',
-              border: '1px solid #CACACA',
+              color: 'var(--color-gray-4)',
+              backgroundColor: 'var(--color-gray-0)',
+              border: '1px solid var(--color-gray-2)',
               borderRadius: '6px',
               cursor: 'pointer',
               transition: 'background-color 0.2s',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#EBEBEB';
+              e.currentTarget.style.backgroundColor = 'var(--color-gray-1)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#F5F5F5';
+              e.currentTarget.style.backgroundColor = 'var(--color-gray-0)';
             }}
           >
             홈으로
@@ -110,18 +110,18 @@ export default function WelcomePage() {
               padding: '14px',
               fontSize: '16px',
               fontWeight: '600',
-              color: '#FDFDFD',
-              backgroundColor: '#BF4134',
+              color: 'var(--color-white)',
+              backgroundColor: 'var(--color-point-main)',
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',
               transition: 'background-color 0.2s',
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#a63a2e';
+              e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = '#BF4134';
+              e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
             }}
           >
             로그인하기

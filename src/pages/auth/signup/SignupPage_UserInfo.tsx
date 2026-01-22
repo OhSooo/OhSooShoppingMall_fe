@@ -136,7 +136,7 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
           style={{
             fontSize: '14px',
             fontWeight: '500',
-            color: '#444444',
+            color: 'var(--color-gray-5)',
           }}
         >
           이름
@@ -151,22 +151,22 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
             width: '100%',
             padding: '12px 16px',
             fontSize: '15px',
-            border: nameError ? '1px solid #BF4134' : '1px solid #CACACA',
+            border: nameError ? '1px solid var(--color-point-main)' : '1px solid var(--color-gray-2)',
             borderRadius: '6px',
             outline: 'none',
             transition: 'border-color 0.2s',
-            backgroundColor: '#FDFDFD',
+            backgroundColor: 'var(--color-white)',
           }}
-          onFocus={(e) => (e.target.style.borderColor = '#BF4134')}
+          onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
           onBlur={(e) => {
-            if (!nameError) e.target.style.borderColor = '#CACACA';
+            if (!nameError) e.target.style.borderColor = 'var(--color-gray-2)';
           }}
         />
         {nameError && (
           <div
             style={{
               fontSize: '13px',
-              color: '#BF4134',
+              color: 'var(--color-point-main)',
               minHeight: '18px',
             }}
           >
@@ -183,7 +183,7 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
           style={{
             fontSize: '14px',
             fontWeight: '500',
-            color: '#444444',
+            color: 'var(--color-gray-5)',
           }}
         >
           생년월일
@@ -197,22 +197,22 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
             width: '100%',
             padding: '12px 16px',
             fontSize: '15px',
-            border: birthError ? '1px solid #BF4134' : '1px solid #CACACA',
+            border: birthError ? '1px solid var(--color-point-main)' : '1px solid var(--color-gray-2)',
             borderRadius: '6px',
             outline: 'none',
             transition: 'border-color 0.2s',
-            backgroundColor: '#FDFDFD',
+            backgroundColor: 'var(--color-white)',
           }}
-          onFocus={(e) => (e.target.style.borderColor = '#BF4134')}
+          onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
           onBlur={(e) => {
-            if (!birthError) e.target.style.borderColor = '#CACACA';
+            if (!birthError) e.target.style.borderColor = 'var(--color-gray-2)';
           }}
         />
         {birthError && (
           <div
             style={{
               fontSize: '13px',
-              color: '#BF4134',
+              color: 'var(--color-point-main)',
               minHeight: '18px',
             }}
           >
@@ -228,7 +228,7 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
           style={{
             fontSize: '14px',
             fontWeight: '500',
-            color: '#444444',
+            color: 'var(--color-gray-5)',
           }}
         >
           성별
@@ -249,7 +249,7 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
                 gap: '8px',
                 cursor: 'pointer',
                 fontSize: '15px',
-                color: '#444444',
+                color: 'var(--color-gray-5)',
               }}
             >
               <input
@@ -262,7 +262,7 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
                   width: '18px',
                   height: '18px',
                   cursor: 'pointer',
-                  accentColor: '#BF4134',
+                  accentColor: 'var(--color-point-main)',
                 }}
               />
               <span>
@@ -283,7 +283,7 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
           style={{
             fontSize: '14px',
             fontWeight: '500',
-            color: '#444444',
+            color: 'var(--color-gray-5)',
           }}
         >
           전화번호
@@ -298,22 +298,22 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
             width: '100%',
             padding: '12px 16px',
             fontSize: '15px',
-            border: phoneError ? '1px solid #BF4134' : '1px solid #CACACA',
+            border: phoneError ? '1px solid var(--color-point-main)' : '1px solid var(--color-gray-2)',
             borderRadius: '6px',
             outline: 'none',
             transition: 'border-color 0.2s',
-            backgroundColor: '#FDFDFD',
+            backgroundColor: 'var(--color-white)',
           }}
-          onFocus={(e) => (e.target.style.borderColor = '#BF4134')}
+          onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
           onBlur={(e) => {
-            if (!phoneError) e.target.style.borderColor = '#CACACA';
+            if (!phoneError) e.target.style.borderColor = 'var(--color-gray-2)';
           }}
         />
         {phoneError && (
           <div
             style={{
               fontSize: '13px',
-              color: '#BF4134',
+              color: 'var(--color-point-main)',
               minHeight: '18px',
             }}
           >
@@ -330,7 +330,7 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
           style={{
             fontSize: '14px',
             fontWeight: '500',
-            color: '#444444',
+            color: 'var(--color-gray-5)',
           }}
         >
           주소
@@ -345,22 +345,22 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
             width: '100%',
             padding: '12px 16px',
             fontSize: '15px',
-            border: addressError ? '1px solid #BF4134' : '1px solid #CACACA',
+            border: addressError ? '1px solid var(--color-point-main)' : '1px solid var(--color-gray-2)',
             borderRadius: '6px',
             outline: 'none',
             transition: 'border-color 0.2s',
-            backgroundColor: '#FDFDFD',
+            backgroundColor: 'var(--color-white)',
           }}
-          onFocus={(e) => (e.target.style.borderColor = '#BF4134')}
+          onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
           onBlur={(e) => {
-            if (!addressError) e.target.style.borderColor = '#CACACA';
+            if (!addressError) e.target.style.borderColor = 'var(--color-gray-2)';
           }}
         />
         {addressError && (
           <div
             style={{
               fontSize: '13px',
-              color: '#BF4134',
+              color: 'var(--color-point-main)',
               minHeight: '18px',
             }}
           >
@@ -387,17 +387,17 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
             fontSize: '16px',
             fontWeight: '600',
             color: '#626262',
-            backgroundColor: '#F5F5F5',
-            border: '1px solid #CACACA',
+            backgroundColor: 'var(--color-gray-0)',
+            border: '1px solid var(--color-gray-2)',
             borderRadius: '6px',
             cursor: 'pointer',
             transition: 'background-color 0.2s',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#EBEBEB';
+            e.currentTarget.style.backgroundColor = 'var(--color-gray-1)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#F5F5F5';
+            e.currentTarget.style.backgroundColor = 'var(--color-gray-0)';
           }}
         >
           이전
@@ -411,18 +411,18 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
             padding: '14px',
             fontSize: '16px',
             fontWeight: '600',
-            color: '#FDFDFD',
-            backgroundColor: isFormValid() ? '#BF4134' : '#9D9D9D',
+            color: 'var(--color-white)',
+            backgroundColor: isFormValid() ? 'var(--color-point-main)' : '#9D9D9D',
             border: 'none',
             borderRadius: '6px',
             cursor: isFormValid() ? 'pointer' : 'not-allowed',
             transition: 'background-color 0.2s',
           }}
           onMouseEnter={(e) => {
-            if (isFormValid()) e.currentTarget.style.backgroundColor = '#a63a2e';
+            if (isFormValid()) e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
           }}
           onMouseLeave={(e) => {
-            if (isFormValid()) e.currentTarget.style.backgroundColor = '#BF4134';
+            if (isFormValid()) e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
           }}
         >
           가입하기

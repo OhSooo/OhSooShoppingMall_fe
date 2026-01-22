@@ -60,7 +60,7 @@ export default function PasswordResetPage() {
           style={{
             fontSize: '28px',
             fontWeight: '700',
-            color: '#1B1B1B',
+            color: 'var(--color-black)',
             marginBottom: '40px',
             textAlign: 'center',
           }}
@@ -72,7 +72,7 @@ export default function PasswordResetPage() {
         <p
           style={{
             fontSize: '15px',
-            color: '#626262',
+            color: 'var(--color-gray-4)',
             textAlign: 'center',
             marginBottom: '40px',
             lineHeight: '1.6',
@@ -100,7 +100,7 @@ export default function PasswordResetPage() {
               style={{
                 fontSize: '14px',
                 fontWeight: '500',
-                color: '#444444',
+                color: 'var(--color-gray-5)',
               }}
             >
               이메일
@@ -120,18 +120,18 @@ export default function PasswordResetPage() {
                 padding: '12px 16px',
                 fontSize: '15px',
                 border: errorMessage
-                  ? '1px solid #BF4134'
-                  : '1px solid #CACACA',
+                  ? '1px solid var(--color-point-main)'
+                  : '1px solid var(--color-gray-2)',
                 borderRadius: '6px',
                 outline: 'none',
                 transition: 'border-color 0.2s',
-                backgroundColor: isLoading ? '#F5F5F5' : '#FDFDFD',
+                backgroundColor: isLoading ? 'var(--color-gray-0)' : 'var(--color-white)',
               }}
               onFocus={(e) => {
-                if (!errorMessage) e.target.style.borderColor = '#BF4134';
+                if (!errorMessage) e.target.style.borderColor = 'var(--color-point-main)';
               }}
               onBlur={(e) => {
-                if (!errorMessage) e.target.style.borderColor = '#CACACA';
+                if (!errorMessage) e.target.style.borderColor = 'var(--color-gray-2)';
               }}
             />
             {/* 에러 메시지 영역 */}
@@ -139,7 +139,7 @@ export default function PasswordResetPage() {
               <div
                 style={{
                   fontSize: '13px',
-                  color: '#BF4134',
+                  color: 'var(--color-point-main)',
                   minHeight: '18px',
                 }}
               >
@@ -158,8 +158,8 @@ export default function PasswordResetPage() {
               padding: '14px',
               fontSize: '16px',
               fontWeight: '600',
-              color: '#FDFDFD',
-              backgroundColor: isLoading ? '#9D9D9D' : '#BF4134',
+              color: 'var(--color-white)',
+              backgroundColor: isLoading ? 'var(--color-gray-3)' : 'var(--color-point-main)',
               border: 'none',
               borderRadius: '6px',
               cursor: isLoading ? 'not-allowed' : 'pointer',
@@ -167,10 +167,10 @@ export default function PasswordResetPage() {
               marginTop: '8px',
             }}
             onMouseEnter={(e) => {
-              if (!isLoading) e.currentTarget.style.backgroundColor = '#a63a2e';
+              if (!isLoading) e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
             }}
             onMouseLeave={(e) => {
-              if (!isLoading) e.currentTarget.style.backgroundColor = '#BF4134';
+              if (!isLoading) e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
             }}
           >
             {isLoading ? '전송 중...' : '임시 비밀번호 발급'}
@@ -182,19 +182,19 @@ export default function PasswordResetPage() {
           style={{
             marginTop: '24px',
             fontSize: '14px',
-            color: '#626262',
+            color: 'var(--color-gray-4)',
           }}
         >
           <span
             onClick={() => navigate('/login')}
             style={{
-              color: '#BF4134',
+              color: 'var(--color-point-main)',
               cursor: 'pointer',
               textDecoration: 'none',
               transition: 'color 0.2s',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#a63a2e')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#BF4134')}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-point-main-hover)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-point-main)')}
           >
             로그인 페이지로 돌아가기
           </span>

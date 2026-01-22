@@ -44,7 +44,7 @@ export default function SignupPage() {
           style={{
             fontSize: '28px',
             fontWeight: '700',
-            color: '#1B1B1B',
+            color: 'var(--color-black)',
             marginBottom: '40px',
             textAlign: 'center',
           }}
@@ -71,7 +71,7 @@ export default function SignupPage() {
               left: '0',
               right: '0',
               height: '2px',
-              backgroundColor: '#EBEBEB',
+              backgroundColor: 'var(--color-gray-1)',
               zIndex: 0,
             }}
           />
@@ -82,7 +82,7 @@ export default function SignupPage() {
               left: '0',
               right: '0',
               height: '2px',
-              backgroundColor: '#BF4134',
+              backgroundColor: 'var(--color-point-main)',
               zIndex: 1,
               width: `${((currentStep - 1) / 2) * 100}%`,
               transition: 'width 0.3s',
@@ -111,8 +111,8 @@ export default function SignupPage() {
                     width: '40px',
                     height: '40px',
                     borderRadius: '50%',
-                    backgroundColor: isActive || isCompleted ? '#BF4134' : '#EBEBEB',
-                    color: isActive || isCompleted ? '#FDFDFD' : '#9D9D9D',
+                    backgroundColor: isActive || isCompleted ? 'var(--color-point-main)' : 'var(--color-gray-1)',
+                    color: isActive || isCompleted ? 'var(--color-white)' : 'var(--color-gray-3)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -126,7 +126,7 @@ export default function SignupPage() {
                 <span
                   style={{
                     fontSize: '13px',
-                    color: isActive || isCompleted ? '#BF4134' : '#9D9D9D',
+                    color: isActive || isCompleted ? 'var(--color-point-main)' : 'var(--color-gray-3)',
                     fontWeight: isActive ? '600' : '400',
                     whiteSpace: 'nowrap',
                   }}

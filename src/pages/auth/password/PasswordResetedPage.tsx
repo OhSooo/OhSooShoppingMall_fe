@@ -24,7 +24,7 @@ export default function PasswordResetedPage() {
             width: '80px',
             height: '80px',
             borderRadius: '50%',
-            backgroundColor: '#BF4134',
+            backgroundColor: 'var(--color-point-main)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -34,7 +34,7 @@ export default function PasswordResetedPage() {
           <span
             style={{
               fontSize: '40px',
-              color: '#FDFDFD',
+              color: 'var(--color-white)',
               fontWeight: '700',
             }}
           >
@@ -47,7 +47,7 @@ export default function PasswordResetedPage() {
           style={{
             fontSize: '28px',
             fontWeight: '700',
-            color: '#1B1B1B',
+            color: 'var(--color-black)',
             marginBottom: '24px',
             textAlign: 'center',
           }}
@@ -59,7 +59,7 @@ export default function PasswordResetedPage() {
         <p
           style={{
             fontSize: '15px',
-            color: '#626262',
+            color: 'var(--color-gray-4)',
             textAlign: 'center',
             marginBottom: '40px',
             lineHeight: '1.6',
@@ -67,7 +67,7 @@ export default function PasswordResetedPage() {
         >
           {email ? (
             <>
-              <strong style={{ color: '#1B1B1B' }}>{email}</strong>로
+              <strong style={{ color: 'var(--color-black)' }}>{email}</strong>로
               <br />
               임시 비밀번호를 전송했습니다.
             </>
@@ -85,7 +85,7 @@ export default function PasswordResetedPage() {
           style={{
             width: '100%',
             padding: '16px',
-            backgroundColor: '#F5F5F5',
+            backgroundColor: 'var(--color-gray-0)',
             borderRadius: '6px',
             marginBottom: '40px',
           }}
@@ -93,7 +93,7 @@ export default function PasswordResetedPage() {
           <p
             style={{
               fontSize: '13px',
-              color: '#626262',
+              color: 'var(--color-gray-4)',
               lineHeight: '1.6',
               margin: 0,
               textAlign: 'center',
@@ -114,18 +114,18 @@ export default function PasswordResetedPage() {
             padding: '14px',
             fontSize: '16px',
             fontWeight: '600',
-            color: '#FDFDFD',
-            backgroundColor: '#BF4134',
+            color: 'var(--color-white)',
+            backgroundColor: 'var(--color-point-main)',
             border: 'none',
             borderRadius: '6px',
             cursor: 'pointer',
             transition: 'background-color 0.2s',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#a63a2e';
+            e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#BF4134';
+            e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
           }}
         >
           로그인 페이지로 이동

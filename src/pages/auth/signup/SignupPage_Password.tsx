@@ -73,7 +73,7 @@ export default function SignupPage_Password({ onNext, onPrev }: Props) {
           style={{
             fontSize: '14px',
             fontWeight: '500',
-            color: '#444444',
+            color: 'var(--color-gray-5)',
           }}
         >
           비밀번호
@@ -88,22 +88,22 @@ export default function SignupPage_Password({ onNext, onPrev }: Props) {
             width: '100%',
             padding: '12px 16px',
             fontSize: '15px',
-            border: passwordError ? '1px solid #BF4134' : '1px solid #CACACA',
+            border: passwordError ? '1px solid var(--color-point-main)' : '1px solid var(--color-gray-2)',
             borderRadius: '6px',
             outline: 'none',
             transition: 'border-color 0.2s',
-            backgroundColor: '#FDFDFD',
+            backgroundColor: 'var(--color-white)',
           }}
-          onFocus={(e) => (e.target.style.borderColor = '#BF4134')}
+          onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
           onBlur={(e) => {
-            if (!passwordError) e.target.style.borderColor = '#CACACA';
+            if (!passwordError) e.target.style.borderColor = 'var(--color-gray-2)';
           }}
         />
         {passwordError && (
           <div
             style={{
               fontSize: '13px',
-              color: '#BF4134',
+              color: 'var(--color-point-main)',
               minHeight: '18px',
             }}
           >
@@ -120,7 +120,7 @@ export default function SignupPage_Password({ onNext, onPrev }: Props) {
           style={{
             fontSize: '14px',
             fontWeight: '500',
-            color: '#444444',
+            color: 'var(--color-gray-5)',
           }}
         >
           비밀번호 확인
@@ -136,23 +136,23 @@ export default function SignupPage_Password({ onNext, onPrev }: Props) {
             padding: '12px 16px',
             fontSize: '15px',
             border: passwordConfirmError
-              ? '1px solid #BF4134'
-              : '1px solid #CACACA',
+              ? '1px solid var(--color-point-main)'
+              : '1px solid var(--color-gray-2)',
             borderRadius: '6px',
             outline: 'none',
             transition: 'border-color 0.2s',
-            backgroundColor: '#FDFDFD',
+            backgroundColor: 'var(--color-white)',
           }}
-          onFocus={(e) => (e.target.style.borderColor = '#BF4134')}
+          onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
           onBlur={(e) => {
-            if (!passwordConfirmError) e.target.style.borderColor = '#CACACA';
+            if (!passwordConfirmError) e.target.style.borderColor = 'var(--color-gray-2)';
           }}
         />
         {passwordConfirmError && (
           <div
             style={{
               fontSize: '13px',
-              color: '#BF4134',
+              color: 'var(--color-point-main)',
               minHeight: '18px',
             }}
           >
@@ -178,18 +178,18 @@ export default function SignupPage_Password({ onNext, onPrev }: Props) {
             padding: '14px',
             fontSize: '16px',
             fontWeight: '600',
-            color: '#626262',
-            backgroundColor: '#F5F5F5',
-            border: '1px solid #CACACA',
+            color: 'var(--color-gray-4)',
+            backgroundColor: 'var(--color-gray-0)',
+            border: '1px solid var(--color-gray-2)',
             borderRadius: '6px',
             cursor: 'pointer',
             transition: 'background-color 0.2s',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = '#EBEBEB';
+            e.currentTarget.style.backgroundColor = 'var(--color-gray-1)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = '#F5F5F5';
+            e.currentTarget.style.backgroundColor = 'var(--color-gray-0)';
           }}
         >
           이전
@@ -203,18 +203,18 @@ export default function SignupPage_Password({ onNext, onPrev }: Props) {
             padding: '14px',
             fontSize: '16px',
             fontWeight: '600',
-            color: '#FDFDFD',
-            backgroundColor: isFormValid() ? '#BF4134' : '#9D9D9D',
+            color: 'var(--color-white)',
+            backgroundColor: isFormValid() ? 'var(--color-point-main)' : 'var(--color-gray-3)',
             border: 'none',
             borderRadius: '6px',
             cursor: isFormValid() ? 'pointer' : 'not-allowed',
             transition: 'background-color 0.2s',
           }}
           onMouseEnter={(e) => {
-            if (isFormValid()) e.currentTarget.style.backgroundColor = '#a63a2e';
+            if (isFormValid()) e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
           }}
           onMouseLeave={(e) => {
-            if (isFormValid()) e.currentTarget.style.backgroundColor = '#BF4134';
+            if (isFormValid()) e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
           }}
         >
           다음

@@ -12,9 +12,9 @@ const socialLoginConfig: Record<
 > = {
   google: {
     label: '구글 계정으로 로그인',
-    bgColor: '#FDFDFD',
-    textColor: '#1B1B1B',
-    hoverBg: '#EBEBEB',
+    bgColor: 'var(--color-white)',
+    textColor: 'var(--color-black)',
+    hoverBg: 'var(--color-gray-1)',
   },
   naver: {
     label: '네이버 계정으로 로그인',
@@ -25,7 +25,7 @@ const socialLoginConfig: Record<
   kakao: {
     label: '카카오 계정으로 로그인',
     bgColor: '#FEE500',
-    textColor: '#1B1B1B',
+    textColor: 'var(--color-black)',
     hoverBg: '#e6cf00',
   },
 };
@@ -109,7 +109,7 @@ export default function LoginPage() {
           style={{
             fontSize: '28px',
             fontWeight: '700',
-            color: '#1B1B1B',
+            color: 'var(--color-black)',
             marginBottom: '40px',
             textAlign: 'center',
           }}
@@ -134,7 +134,7 @@ export default function LoginPage() {
               style={{
                 fontSize: '14px',
                 fontWeight: '500',
-                color: '#444444',
+                color: 'var(--color-gray-5)',
               }}
             >
               이메일
@@ -149,14 +149,14 @@ export default function LoginPage() {
                 width: '100%',
                 padding: '12px 16px',
                 fontSize: '15px',
-                border: '1px solid #CACACA',
+                border: '1px solid var(--color-gray-2)',
                 borderRadius: '6px',
                 outline: 'none',
                 transition: 'border-color 0.2s',
-                backgroundColor: '#FDFDFD',
+                backgroundColor: 'var(--color-white)',
               }}
-              onFocus={(e) => (e.target.style.borderColor = '#BF4134')}
-              onBlur={(e) => (e.target.style.borderColor = '#CACACA')}
+              onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
+              onBlur={(e) => (e.target.style.borderColor = 'var(--color-gray-2)')}
             />
             {/* 이메일 유효성 검사 메시지 영역 (나중에 사용) */}
             <div style={{ minHeight: '18px' }}></div>
@@ -169,7 +169,7 @@ export default function LoginPage() {
               style={{
                 fontSize: '14px',
                 fontWeight: '500',
-                color: '#444444',
+                color: 'var(--color-gray-5)',
               }}
             >
               비밀번호
@@ -184,14 +184,14 @@ export default function LoginPage() {
                 width: '100%',
                 padding: '12px 16px',
                 fontSize: '15px',
-                border: '1px solid #CACACA',
+                border: '1px solid var(--color-gray-2)',
                 borderRadius: '6px',
                 outline: 'none',
                 transition: 'border-color 0.2s',
-                backgroundColor: '#FDFDFD',
+                backgroundColor: 'var(--color-white)',
               }}
-              onFocus={(e) => (e.target.style.borderColor = '#BF4134')}
-              onBlur={(e) => (e.target.style.borderColor = '#CACACA')}
+              onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
+              onBlur={(e) => (e.target.style.borderColor = 'var(--color-gray-2)')}
             />
             {/* 비밀번호 유효성 검사 메시지 영역 (나중에 사용) */}
             <div style={{ minHeight: '18px' }}></div>
@@ -206,8 +206,8 @@ export default function LoginPage() {
               padding: '14px',
               fontSize: '16px',
               fontWeight: '600',
-              color: '#FDFDFD',
-              backgroundColor: isLoading ? '#9D9D9D' : '#BF4134',
+              color: 'var(--color-white)',
+              backgroundColor: isLoading ? 'var(--color-gray-3)' : 'var(--color-point-main)',
               border: 'none',
               borderRadius: '6px',
               cursor: isLoading ? 'not-allowed' : 'pointer',
@@ -215,10 +215,10 @@ export default function LoginPage() {
               marginTop: '8px',
             }}
             onMouseEnter={(e) => {
-              if (!isLoading) e.currentTarget.style.backgroundColor = '#a63a2e';
+              if (!isLoading) e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
             }}
             onMouseLeave={(e) => {
-              if (!isLoading) e.currentTarget.style.backgroundColor = '#BF4134';
+              if (!isLoading) e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
             }}
           >
             {isLoading ? '로그인 중...' : '로그인'}
@@ -238,25 +238,25 @@ export default function LoginPage() {
           <Link
             to="/password-reset"
             style={{
-              color: '#626262',
+              color: 'var(--color-gray-4)',
               textDecoration: 'none',
               transition: 'color 0.2s',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#BF4134')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#626262')}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-point-main)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-gray-4)')}
           >
             비밀번호 재발급
           </Link>
-          <span style={{ color: '#CACACA' }}>|</span>
+          <span style={{ color: 'var(--color-gray-2)' }}>|</span>
           <Link
             to="/signup"
             style={{
-              color: '#626262',
+              color: 'var(--color-gray-4)',
               textDecoration: 'none',
               transition: 'color 0.2s',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = '#BF4134')}
-            onMouseLeave={(e) => (e.currentTarget.style.color = '#626262')}
+            onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-point-main)')}
+            onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--color-gray-4)')}
           >
             회원가입
           </Link>
@@ -272,9 +272,9 @@ export default function LoginPage() {
             gap: '16px',
           }}
         >
-          <div style={{ flex: 1, height: '1px', backgroundColor: '#EBEBEB' }} />
-          <span style={{ fontSize: '13px', color: '#9D9D9D' }}>또는</span>
-          <div style={{ flex: 1, height: '1px', backgroundColor: '#EBEBEB' }} />
+          <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--color-gray-1)' }} />
+          <span style={{ fontSize: '13px', color: 'var(--color-gray-3)' }}>또는</span>
+          <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--color-gray-1)' }} />
         </div>
 
         {/* 소셜 로그인 버튼들 */}
@@ -304,7 +304,7 @@ export default function LoginPage() {
                   fontWeight: '500',
                   color: config.textColor,
                   backgroundColor: isHovered ? config.hoverBg : config.bgColor,
-                  border: provider === 'google' ? '1px solid #CACACA' : 'none',
+                  border: provider === 'google' ? '1px solid var(--color-gray-2)' : 'none',
                   borderRadius: '6px',
                   cursor: 'pointer',
                   transition: 'background-color 0.2s',

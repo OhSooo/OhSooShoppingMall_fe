@@ -74,7 +74,7 @@ export default function SignupPage_Email({ onNext }: Props) {
           style={{
             fontSize: '14px',
             fontWeight: '500',
-            color: '#444444',
+            color: 'var(--color-gray-5)',
           }}
         >
           이메일
@@ -98,9 +98,9 @@ export default function SignupPage_Email({ onNext }: Props) {
               borderRadius: '6px',
               outline: 'none',
               transition: 'border-color 0.2s',
-              backgroundColor: isCodeSent ? '#F5F5F5' : '#FDFDFD',
+              backgroundColor: isCodeSent ? 'var(--color-gray-0)' : 'var(--color-white)',
             }}
-            onFocus={(e) => (e.target.style.borderColor = '#BF4134')}
+            onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
             onBlur={(e) => (e.target.style.borderColor = '#CACACA')}
           />
           <button
@@ -111,8 +111,8 @@ export default function SignupPage_Email({ onNext }: Props) {
               padding: '12px 24px',
               fontSize: '15px',
               fontWeight: '500',
-              color: '#FDFDFD',
-              backgroundColor: isCodeSent ? '#9D9D9D' : '#BF4134',
+              color: 'var(--color-white)',
+              backgroundColor: isCodeSent ? '#9D9D9D' : 'var(--color-point-main)',
               border: 'none',
               borderRadius: '6px',
               cursor: isCodeSent ? 'not-allowed' : 'pointer',
@@ -120,10 +120,10 @@ export default function SignupPage_Email({ onNext }: Props) {
               whiteSpace: 'nowrap',
             }}
             onMouseEnter={(e) => {
-              if (!isCodeSent) e.currentTarget.style.backgroundColor = '#a63a2e';
+              if (!isCodeSent) e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
             }}
             onMouseLeave={(e) => {
-              if (!isCodeSent) e.currentTarget.style.backgroundColor = '#BF4134';
+              if (!isCodeSent) e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
             }}
           >
             {isCodeSent ? '전송 완료' : '전송'}
@@ -140,7 +140,7 @@ export default function SignupPage_Email({ onNext }: Props) {
             style={{
               fontSize: '14px',
               fontWeight: '500',
-              color: '#444444',
+              color: 'var(--color-gray-5)',
             }}
           >
             인증번호
@@ -162,14 +162,14 @@ export default function SignupPage_Email({ onNext }: Props) {
                 padding: '12px 16px',
                 fontSize: '15px',
                 border: errorMessage
-                  ? '1px solid #BF4134'
+                  ? '1px solid var(--color-point-main)'
                   : '1px solid #CACACA',
                 borderRadius: '6px',
                 outline: 'none',
                 transition: 'border-color 0.2s',
-                backgroundColor: '#FDFDFD',
+                backgroundColor: 'var(--color-white)',
               }}
-              onFocus={(e) => (e.target.style.borderColor = '#BF4134')}
+              onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
               onBlur={(e) => {
                 if (!errorMessage) e.target.style.borderColor = '#CACACA';
               }}
@@ -181,8 +181,8 @@ export default function SignupPage_Email({ onNext }: Props) {
                 padding: '12px 24px',
                 fontSize: '15px',
                 fontWeight: '500',
-                color: '#FDFDFD',
-                backgroundColor: '#BF4134',
+                color: 'var(--color-white)',
+                backgroundColor: 'var(--color-point-main)',
                 border: 'none',
                 borderRadius: '6px',
                 cursor: 'pointer',
@@ -190,10 +190,10 @@ export default function SignupPage_Email({ onNext }: Props) {
                 whiteSpace: 'nowrap',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#a63a2e';
+                e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#BF4134';
+                e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
               }}
             >
               확인
@@ -203,7 +203,7 @@ export default function SignupPage_Email({ onNext }: Props) {
             <div
               style={{
                 fontSize: '13px',
-                color: '#BF4134',
+                color: 'var(--color-point-main)',
                 minHeight: '18px',
               }}
             >
@@ -224,8 +224,8 @@ export default function SignupPage_Email({ onNext }: Props) {
           padding: '14px',
           fontSize: '16px',
           fontWeight: '600',
-          color: '#FDFDFD',
-          backgroundColor: isCodeVerified ? '#BF4134' : '#9D9D9D',
+          color: 'var(--color-white)',
+          backgroundColor: isCodeVerified ? 'var(--color-point-main)' : '#9D9D9D',
           border: 'none',
           borderRadius: '6px',
           cursor: isCodeVerified ? 'pointer' : 'not-allowed',
@@ -233,10 +233,10 @@ export default function SignupPage_Email({ onNext }: Props) {
           marginTop: '8px',
         }}
         onMouseEnter={(e) => {
-          if (isCodeVerified) e.currentTarget.style.backgroundColor = '#a63a2e';
+          if (isCodeVerified) e.currentTarget.style.backgroundColor = 'var(--color-point-main-hover)';
         }}
         onMouseLeave={(e) => {
-          if (isCodeVerified) e.currentTarget.style.backgroundColor = '#BF4134';
+          if (isCodeVerified) e.currentTarget.style.backgroundColor = 'var(--color-point-main)';
         }}
       >
         다음
