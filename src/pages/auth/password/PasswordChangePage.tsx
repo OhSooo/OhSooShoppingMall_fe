@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import PageShell from '../../../components/common/PageShell';
 import SuccessModal from '../../../components/common/SuccessModal';
 import PasswordInput from '../../../components/common/PasswordInput';
+import { changePassword } from '../../../services/auth/passwordService';
 
 export default function PasswordChangePage() {
   const navigate = useNavigate();
@@ -99,8 +100,11 @@ export default function PasswordChangePage() {
       setSubmitError('');
 
       try {
-        // TODO: API 호출하여 비밀번호 변경
-        // await changePassword({ currentPassword, newPassword, newPasswordConfirm });
+        await changePassword({
+          currentPassword,
+          newPassword,
+          newPasswordConfirm,
+        });
         
         setShowSuccessModal(true);
         setTimeout(() => {

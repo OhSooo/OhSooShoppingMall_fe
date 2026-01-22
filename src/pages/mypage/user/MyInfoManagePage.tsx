@@ -1,14 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PageShell from '../../../components/common/PageShell';
 import SuccessModal from '../../../components/common/SuccessModal';
+import { getMyInfo, updateMyProfile } from '../../../services/user/userService';
 
 type Gender = 'MALE' | 'FEMALE' | 'OTHER';
 
 export default function MyInfoManagePage() {
   const navigate = useNavigate();
   
-  // TODO: API에서 사용자 정보를 가져와서 초기값으로 설정
   const [name, setName] = useState('');
   const [birth, setBirth] = useState('');
   const [gender, setGender] = useState<Gender | ''>('');
@@ -20,8 +20,32 @@ export default function MyInfoManagePage() {
   const [phoneError, setPhoneError] = useState('');
   const [addressError, setAddressError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const [submitError, setSubmitError] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // 페이지 로드 시 사용자 정보 가져오기
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        setIsLoadingData(true);
+        const userInfo = await getMyInfo();
+        
+        setName(userInfo.name || '');
+        setBirth(userInfo.birth || '');
+        setGender(userInfo.gender || '');
+        setPhone(userInfo.phone || '');
+        setAddress(userInfo.address || '');
+      } catch (error: any) {
+        console.error('사용자 정보 조회 실패:', error);
+        setSubmitError(error?.message || '사용자 정보를 불러오는데 실패했습니다.');
+      } finally {
+        setIsLoadingData(false);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   const handleNameChange = (value: string) => {
     setName(value);
@@ -105,8 +129,13 @@ export default function MyInfoManagePage() {
       setSubmitError('');
 
       try {
-        // TODO: API 호출하여 사용자 정보 업데이트
-        // await updateUserProfile({ name, birth, gender, phone, address });
+        await updateMyProfile({
+          name,
+          birth,
+          gender: gender as Gender,
+          phone,
+          address,
+        });
         
         setShowSuccessModal(true);
         setTimeout(() => {
@@ -175,8 +204,22 @@ export default function MyInfoManagePage() {
           </h1>
         </div>
 
-        {/* 폼 */}
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        {/* 로딩 중 표시 */}
+        {isLoadingData ? (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: '40px',
+              color: 'var(--color-gray-4)',
+            }}
+          >
+            정보를 불러오는 중...
+          </div>
+        ) : (
+          /* 폼 */
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           {/* 이름 입력 */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <label
@@ -471,6 +514,7 @@ export default function MyInfoManagePage() {
             {isLoading ? '수정 중...' : '수정'}
           </button>
         </form>
+        )}
       </div>
     </PageShell>
   );

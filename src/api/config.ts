@@ -56,37 +56,51 @@ export async function authenticatedFetch(
   url: string,
   options: RequestInit = {}
 ): Promise<Response> {
-  // 토큰이 만료되었거나 곧 만료될 경우 자동으로 재발급
   const accessToken = await getValidAccessToken();
-  
-  // 헤더에 토큰 추가
-  const headers = new Headers(options.headers);
+
+  // ✅ 기존 headers + defaultFetchOptions.headers 를 합쳐서 시작
+  const headers = new Headers(defaultFetchOptions.headers);
+  new Headers(options.headers).forEach((value, key) => {
+    headers.set(key, value);
+  });
+
+  // ✅ Authorization 추가
   if (accessToken) {
     const tokenType = localStorage.getItem('tokenType') || 'Bearer';
     headers.set('Authorization', `${tokenType} ${accessToken}`);
   }
 
-  // 첫 번째 요청 시도
+  // ✅ body가 있는데 Content-Type이 비어있으면 JSON으로 보장
+  // (defaultFetchOptions로 이미 json이긴 한데, 혹시 호출부에서 지웠을 때 대비)
+  if (options.body && !headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
+
   let response = await fetch(url, {
     ...options,
     headers,
-    credentials: 'include', // 쿠키 포함
+    credentials: 'include',
   });
 
-  // 401 에러이고 토큰이 있는 경우 재발급 후 재시도
   if (response.status === 401 && accessToken) {
     try {
-      // 토큰 재발급
       await reissueToken();
-      
-      // 새로운 토큰으로 재시도
+
       const newAccessToken = localStorage.getItem('accessToken');
       const tokenType = localStorage.getItem('tokenType') || 'Bearer';
-      
+
       if (newAccessToken) {
-        const retryHeaders = new Headers(options.headers);
+        // ✅ retry도 동일하게 헤더 merge + Content-Type 유지
+        const retryHeaders = new Headers(defaultFetchOptions.headers);
+        new Headers(options.headers).forEach((value, key) => {
+          retryHeaders.set(key, value);
+        });
         retryHeaders.set('Authorization', `${tokenType} ${newAccessToken}`);
-        
+
+        if (options.body && !retryHeaders.has('Content-Type')) {
+          retryHeaders.set('Content-Type', 'application/json');
+        }
+
         response = await fetch(url, {
           ...options,
           headers: retryHeaders,
@@ -94,7 +108,6 @@ export async function authenticatedFetch(
         });
       }
     } catch (error) {
-      // 재발급 실패 시 원래 응답 반환
       console.error('토큰 재발급 실패:', error);
     }
   }

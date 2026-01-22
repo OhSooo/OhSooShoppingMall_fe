@@ -68,3 +68,37 @@ export interface PasswordResetResponse {
   accepted: boolean;
   email: string;
 }
+
+// 비밀번호 변경 Request
+export interface PasswordChangeRequest {
+  currentPassword: string;
+  newPassword: string;
+  newPasswordConfirm: string;
+}
+
+// 비밀번호 변경 Response
+export interface PasswordChangeResponse {
+  changed: boolean;
+  changedAt: string; // ISO 8601 형식 (OffsetDateTime)
+}
+
+// 사용자 프로필 수정 Request
+export interface UserProfileUpdateRequest {
+  name?: string;
+  birth?: string; // YYYY-MM-DD 형식 (LocalDate)
+  gender?: 'MALE' | 'FEMALE' | 'OTHER';
+  phone?: string;
+  address?: string;
+}
+
+// 내 정보 조회 Response
+export interface UserMeResponse {
+  userId: number;
+  name: string;
+  birth: string; // YYYY-MM-DD 형식 (LocalDate)
+  gender: 'MALE' | 'FEMALE' | 'OTHER';
+  phone: string;
+  address: string;
+  role: 'USER' | 'STORE_OWNER' | 'ADMIN';
+  onboarded: boolean;
+}

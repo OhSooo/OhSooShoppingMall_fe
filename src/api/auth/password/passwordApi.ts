@@ -1,12 +1,14 @@
 import {
   API_BASE_URL,
-  defaultFetchOptions,
+  authenticatedFetch,
   handleApiResponse,
 } from '../../../api/config';
 import type {
   BaseResponse,
   PasswordResetRequest,
   PasswordResetResponse,
+  PasswordChangeRequest,
+  PasswordChangeResponse,
 } from '../../../api/types';
 
 /**
@@ -24,4 +26,20 @@ export async function resetPassword(
   });
 
   return handleApiResponse<PasswordResetResponse>(response);
+}
+
+/**
+ * 비밀번호 변경
+ * - 인증: AccessToken 필요
+ * - 현재 비밀번호 검증 후 새 비밀번호로 변경
+ */
+export async function changePassword(
+  request: PasswordChangeRequest
+): Promise<BaseResponse<PasswordChangeResponse>> {
+  const response = await authenticatedFetch(`${API_BASE_URL}/auth/password`, {
+    method: 'PATCH',
+    body: JSON.stringify(request),
+  });
+
+  return handleApiResponse<PasswordChangeResponse>(response);
 }
