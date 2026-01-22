@@ -11,6 +11,8 @@ import MainLayout from '@/layouts/MainLayout';
 
 // pages
 import LoginPage from '@/pages/auth/LoginPage';
+import SignupPage from '@/pages/auth/signup/SignupPage';
+import WelcomePage from '@/pages/auth/signup/WelcomePage';
 import HomePage from '@/pages/home/HomePage';
 
 import AllListPage from '@/pages/list/AllListPage';
@@ -134,8 +136,10 @@ const router = createBrowserRouter([
           // 홈
           { index: true, element: <HomePage /> },
 
-          // 로그인 / 권한 없음 페이지도 레이아웃 안에
+          // 로그인 / 회원가입 / 권한 없음 페이지도 레이아웃 안에
           { path: 'login', element: <LoginPage /> },
+          { path: 'signup', element: <SignupPage /> },
+          { path: 'signup/welcome', element: <WelcomePage /> },
           { path: 'unauthorized', element: <UnauthorizedPage /> },
 
           // 목록 / 검색
