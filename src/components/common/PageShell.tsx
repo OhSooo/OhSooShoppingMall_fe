@@ -30,7 +30,7 @@ export default function PageShell({ children }: Props) {
             backgroundColor: 'var(--color-white)',
             border: '3px solid var(--color-point-main)',
             borderRadius: '3px',
-            padding: '24px 32px',
+            padding: '48px 40px',
             // 컨텐츠에 맞게 자연스럽게 늘어남
             height: 'fit-content',
             minHeight: '400px',

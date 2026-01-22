@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -33,9 +33,11 @@ import PaymentFailPage from '@/pages/buy/payment/PaymentFailPage';
 import ChatPage from '@/pages/chat/ChatPage';
 import ChatRoomPage from '@/pages/chat/ChatRoomPage';
 
+import MyPage from '@/pages/mypage/MyPage';
 import MyInfoManagePage from '@/pages/mypage/user/MyInfoManagePage';
 import MyOrderPage from '@/pages/mypage/order/MyOrderPage';
 import MyReviewPage from '@/pages/mypage/review/MyReviewPage';
+import PasswordChangePage from '@/pages/auth/password/PasswordChangePage';
 
 import NotFoundPage from '@/pages/exception/NotFoundPage';
 import ErrorPage from '@/pages/exception/ErrorPage';
@@ -160,9 +162,10 @@ const router = createBrowserRouter([
           {
             element: <RequireAuth />,
             children: [
-              // 마이페이지: /mypage -> /mypage/user
-              { path: 'mypage', element: <Navigate to="/mypage/user" replace /> },
+              // 마이페이지
+              { path: 'mypage', element: <MyPage /> },
               { path: 'mypage/user', element: <MyInfoManagePage /> },
+              { path: 'mypage/password', element: <PasswordChangePage /> },
               { path: 'mypage/order', element: <MyOrderPage /> },
               { path: 'mypage/review', element: <MyReviewPage /> },
 
