@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import PageShell from '../../components/common/PageShell';
 import { loginLocal } from '../../services/auth/loginService';
+import PasswordInput from '../../components/common/PasswordInput';
 
 // 소셜 로그인 Provider 타입
 type SocialProvider = 'google' | 'naver' | 'kakao';
@@ -165,39 +166,13 @@ export default function LoginPage() {
           </div>
 
           {/* 비밀번호 입력 */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <label
-              htmlFor="password"
-              style={{
-                fontSize: '14px',
-                fontWeight: '500',
-                color: 'var(--color-gray-5)',
-              }}
-            >
-              비밀번호
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="비밀번호를 입력하세요"
-              style={{
-                width: '100%',
-                padding: '12px 16px',
-                fontSize: '15px',
-                border: '1px solid var(--color-gray-2)',
-                borderRadius: '6px',
-                outline: 'none',
-                transition: 'border-color 0.2s',
-                backgroundColor: 'var(--color-white)',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
-              onBlur={(e) => (e.target.style.borderColor = 'var(--color-gray-2)')}
-            />
-            {/* 비밀번호 유효성 검사 메시지 영역 (나중에 사용) */}
-            <div style={{ minHeight: '18px' }}></div>
-          </div>
+          <PasswordInput
+            id="password"
+            label="비밀번호"
+            value={password}
+            onChange={setPassword}
+            placeholder="비밀번호를 입력하세요"
+          />
 
           {/* 로그인 버튼 */}
           <button

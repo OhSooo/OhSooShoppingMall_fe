@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setPassword, setPasswordConfirm } from '../../../store/signupSlice';
 import { validatePassword, validatePasswordConfirm } from '../../../utils/validation';
+import PasswordInput from '../../../components/common/PasswordInput';
 
 type Props = {
   onNext: () => void;
@@ -14,8 +15,6 @@ export default function SignupPage_Password({ onNext, onPrev }: Props) {
 
   const [passwordError, setPasswordError] = useState('');
   const [passwordConfirmError, setPasswordConfirmError] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
   const handlePasswordChange = (value: string) => {
     dispatch(setPassword(value));
@@ -54,160 +53,24 @@ export default function SignupPage_Password({ onNext, onPrev }: Props) {
       }}
     >
       {/* 비밀번호 입력 */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <label
-          htmlFor="password"
-          style={{
-            fontSize: '14px',
-            fontWeight: '500',
-            color: 'var(--color-gray-5)',
-          }}
-        >
-          비밀번호
-        </label>
-        <div style={{ position: 'relative' }}>
-          <input
-            id="password"
-            type={showPassword ? 'text' : 'password'}
-            value={password}
-            onChange={(e) => handlePasswordChange(e.target.value)}
-            placeholder="비밀번호를 입력하세요 (8자 이상, 영문과 숫자 포함)"
-            style={{
-              width: '100%',
-              padding: '12px 44px 12px 16px',
-              fontSize: '15px',
-              border: passwordError ? '1px solid var(--color-point-main)' : '1px solid var(--color-gray-2)',
-              borderRadius: '6px',
-              outline: 'none',
-              transition: 'border-color 0.2s',
-              backgroundColor: 'var(--color-white)',
-            }}
-            onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
-            onBlur={(e) => {
-              if (!passwordError) e.target.style.borderColor = 'var(--color-gray-2)';
-            }}
-          />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            style={{
-              position: 'absolute',
-              right: '12px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--color-gray-4)',
-              fontSize: '18px',
-              transition: 'color 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--color-gray-5)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'var(--color-gray-4)';
-            }}
-          >
-            {showPassword ? '👁️' : '👁️‍🗨️'}
-          </button>
-        </div>
-        {passwordError && (
-          <div
-            style={{
-              fontSize: '13px',
-              color: 'var(--color-point-main)',
-              minHeight: '18px',
-            }}
-          >
-            {passwordError}
-          </div>
-        )}
-        {!passwordError && <div style={{ minHeight: '18px' }}></div>}
-      </div>
+      <PasswordInput
+        id="password"
+        label="비밀번호"
+        value={password}
+        onChange={handlePasswordChange}
+        placeholder="비밀번호를 입력하세요 (8자 이상, 영문과 숫자 포함)"
+        error={passwordError}
+      />
 
       {/* 비밀번호 확인 입력 */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <label
-          htmlFor="passwordConfirm"
-          style={{
-            fontSize: '14px',
-            fontWeight: '500',
-            color: 'var(--color-gray-5)',
-          }}
-        >
-          비밀번호 확인
-        </label>
-        <div style={{ position: 'relative' }}>
-          <input
-            id="passwordConfirm"
-            type={showPasswordConfirm ? 'text' : 'password'}
-            value={passwordConfirm}
-            onChange={(e) => handlePasswordConfirmChange(e.target.value)}
-            placeholder="비밀번호를 한 번 더 입력하세요"
-            style={{
-              width: '100%',
-              padding: '12px 44px 12px 16px',
-              fontSize: '15px',
-              border: passwordConfirmError
-                ? '1px solid var(--color-point-main)'
-                : '1px solid var(--color-gray-2)',
-              borderRadius: '6px',
-              outline: 'none',
-              transition: 'border-color 0.2s',
-              backgroundColor: 'var(--color-white)',
-            }}
-            onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
-            onBlur={(e) => {
-              if (!passwordConfirmError) e.target.style.borderColor = 'var(--color-gray-2)';
-            }}
-          />
-          <button
-            type="button"
-            onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
-            style={{
-              position: 'absolute',
-              right: '12px',
-              top: '50%',
-              transform: 'translateY(-50%)',
-              background: 'none',
-              border: 'none',
-              cursor: 'pointer',
-              padding: '4px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'var(--color-gray-4)',
-              fontSize: '18px',
-              transition: 'color 0.2s',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = 'var(--color-gray-5)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = 'var(--color-gray-4)';
-            }}
-          >
-            {showPasswordConfirm ? '👁️' : '👁️‍🗨️'}
-          </button>
-        </div>
-        {passwordConfirmError && (
-          <div
-            style={{
-              fontSize: '13px',
-              color: 'var(--color-point-main)',
-              minHeight: '18px',
-            }}
-          >
-            {passwordConfirmError}
-          </div>
-        )}
-        {!passwordConfirmError && <div style={{ minHeight: '18px' }}></div>}
-      </div>
+      <PasswordInput
+        id="passwordConfirm"
+        label="비밀번호 확인"
+        value={passwordConfirm}
+        onChange={handlePasswordConfirmChange}
+        placeholder="비밀번호를 한 번 더 입력하세요"
+        error={passwordConfirmError}
+      />
 
       {/* 버튼들 */}
       <div
