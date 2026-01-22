@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import PageShell from '../../components/common/PageShell';
+import { loginLocal } from '../../services/auth/loginService';
 
 // 소셜 로그인 Provider 타입
 type SocialProvider = 'google' | 'naver' | 'kakao';
@@ -65,16 +66,17 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      // TODO: 실제 로그인 API 호출
-      // const response = await loginApi({ email, password });
-
-      // 임시 로그인 처리
-      localStorage.setItem('accessToken', 'test-token');
+      await loginLocal({ email, password });
+      
+      // 로그인 성공 시 role은 서버에서 받아오거나 별도 API로 조회해야 할 수 있음
+      // 현재는 기본값으로 설정 (필요시 수정)
       localStorage.setItem('role', 'USER');
 
       navigate(redirect, { replace: true });
-    } catch (error) {
-      alert('로그인에 실패했습니다. 다시 시도해주세요.');
+    } catch (error: any) {
+      // 에러 메시지 표시
+      const errorMessage = error?.message || '로그인에 실패했습니다. 다시 시도해주세요.';
+      alert(errorMessage);
     } finally {
       setIsLoading(false);
     }

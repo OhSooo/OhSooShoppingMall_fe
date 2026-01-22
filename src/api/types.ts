@@ -44,3 +44,16 @@ export interface LocalSignupRequest {
 export interface LocalSignupResponse {
   name: string;
 }
+
+// 로컬 로그인 Request
+export interface LocalLoginRequest {
+  email: string;
+  password: string;
+}
+
+// AccessToken Response
+export interface AccessTokenResponse {
+  accessToken: string;
+  tokenType: string;
+  expiresIn: number; // 만료 시간(초)
+}
