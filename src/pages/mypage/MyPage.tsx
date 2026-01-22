@@ -6,6 +6,9 @@ import { logout } from '../../services/auth/loginService';
 export default function MyPage() {
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  
+  // 소셜 로그인 여부 확인
+  const isSocialLogin = localStorage.getItem('isSocialLogin') === 'true';
   return (
     <PageShell>
       <div
@@ -104,72 +107,74 @@ export default function MyPage() {
             </div>
           </Link>
 
-          {/* 비밀번호 변경 카드 */}
-          <Link
-            to="/mypage/password"
-            style={{
-              display: 'block',
-              padding: '24px',
-              border: '2px solid var(--color-gray-2)',
-              borderRadius: '8px',
-              textDecoration: 'none',
-              color: 'var(--color-black)',
-              transition: 'all 0.2s',
-              backgroundColor: 'var(--color-white)',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-point-main)';
-              e.currentTarget.style.backgroundColor = 'var(--color-point-back)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-gray-2)';
-              e.currentTarget.style.backgroundColor = 'var(--color-white)';
-            }}
-          >
-            <div
+          {/* 비밀번호 변경 카드 - 소셜 로그인 사용자는 표시하지 않음 */}
+          {!isSocialLogin && (
+            <Link
+              to="/mypage/password"
               style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
+                display: 'block',
+                padding: '24px',
+                border: '2px solid var(--color-gray-2)',
+                borderRadius: '8px',
+                textDecoration: 'none',
+                color: 'var(--color-black)',
+                transition: 'all 0.2s',
+                backgroundColor: 'var(--color-white)',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--color-point-main)';
+                e.currentTarget.style.backgroundColor = 'var(--color-point-back)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--color-gray-2)';
+                e.currentTarget.style.backgroundColor = 'var(--color-white)';
               }}
             >
-              <div>
-                <h2
-                  style={{
-                    fontSize: '18px',
-                    fontWeight: '600',
-                    marginBottom: '4px',
-                    color: 'var(--color-black)',
-                  }}
-                >
-                  비밀번호 변경
-                </h2>
-                <p
-                  style={{
-                    fontSize: '14px',
-                    color: 'var(--color-gray-4)',
-                    margin: 0,
-                  }}
-                >
-                  현재 비밀번호를 확인하고 새로운 비밀번호로 변경할 수 있습니다.
-                </p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                style={{ width: '24px', height: '24px', color: 'var(--color-gray-3)' }}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </div>
-          </Link>
+                <div>
+                  <h2
+                    style={{
+                      fontSize: '18px',
+                      fontWeight: '600',
+                      marginBottom: '4px',
+                      color: 'var(--color-black)',
+                    }}
+                  >
+                    비밀번호 변경
+                  </h2>
+                  <p
+                    style={{
+                      fontSize: '14px',
+                      color: 'var(--color-gray-4)',
+                      margin: 0,
+                    }}
+                  >
+                    현재 비밀번호를 확인하고 새로운 비밀번호로 변경할 수 있습니다.
+                  </p>
+                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  style={{ width: '24px', height: '24px', color: 'var(--color-gray-3)' }}
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </div>
+            </Link>
+          )}
         </div>
 
         {/* 로그아웃 버튼 */}

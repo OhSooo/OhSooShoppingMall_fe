@@ -44,6 +44,9 @@ export default function OAuthCallbackPage() {
           localStorage.setItem('role', user.role);
         }
 
+        // 소셜 로그인 여부 저장
+        localStorage.setItem('isSocialLogin', 'true');
+
         // Step C: 라우팅
         if (user.onboarded) {
           // 온보딩 완료 → 홈으로 이동

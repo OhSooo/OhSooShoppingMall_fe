@@ -27,6 +27,9 @@ export async function loginLocal(request: LocalLoginRequest) {
   const expiresAt = Date.now() + expiresIn * 1000;
   localStorage.setItem('tokenExpiresAt', expiresAt.toString());
 
+  // 로컬 로그인임을 표시 (소셜 로그인 아님)
+  localStorage.setItem('isSocialLogin', 'false');
+
   return response.data;
 }
 
@@ -73,5 +76,6 @@ export async function logout() {
     localStorage.removeItem('tokenExpiresIn');
     localStorage.removeItem('tokenExpiresAt');
     localStorage.removeItem('role');
+    localStorage.removeItem('isSocialLogin');
   }
 }
