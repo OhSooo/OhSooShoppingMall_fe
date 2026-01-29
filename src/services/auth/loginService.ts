@@ -59,6 +59,19 @@ export async function reissueToken() {
 }
 
 /**
+ * 인증 저장소만 비우기 (API 호출 없음)
+ * - 토큰 유효성 검사 실패(401) 시 클라이언트에서만 로그아웃 처리할 때 사용
+ */
+export function clearAuthStorage() {
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('tokenType');
+  localStorage.removeItem('tokenExpiresIn');
+  localStorage.removeItem('tokenExpiresAt');
+  localStorage.removeItem('role');
+  localStorage.removeItem('isSocialLogin');
+}
+
+/**
  * 로그아웃 서비스
  * - localStorage에서 토큰 정보 제거
  * - refresh token 쿠키는 서버에서 만료시킴
@@ -70,12 +83,6 @@ export async function logout() {
     // API 호출 실패해도 클라이언트 측 토큰은 제거
     console.error('로그아웃 API 호출 실패:', error);
   } finally {
-    // localStorage에서 토큰 정보 제거
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('tokenType');
-    localStorage.removeItem('tokenExpiresIn');
-    localStorage.removeItem('tokenExpiresAt');
-    localStorage.removeItem('role');
-    localStorage.removeItem('isSocialLogin');
+    clearAuthStorage();
   }
 }

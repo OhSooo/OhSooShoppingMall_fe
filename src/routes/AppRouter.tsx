@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -6,6 +6,9 @@ import {
   Outlet,
   useLocation,
 } from 'react-router-dom';
+
+import { getMe } from '@/api/users/userApi';
+import { clearAuthStorage } from '@/services/auth/loginService';
 
 import MainLayout from '@/layouts/MainLayout';
 
@@ -58,7 +61,34 @@ function ScrollToTop() {
   return null;
 }
 
+/**
+ * 앱 로드 시 localStorage 토큰 유효성 검사 (백그라운드)
+ * - 토큰이 있을 때만 GET /users/me 호출 (authenticatedFetch가 401 시 refresh 후 재시도)
+ * - 검사 성공(200) → 로그인 상태 유지
+ * - 검사 실패(401, 네트워크 에러 등 어떤 이유든) → 저장소 비우고 비로그인 상태로 처리
+ *   → 보호된 페이지(mypage 등)는 RequireAuth가 로그인 페이지로 리다이렉트
+ */
 function RootWrapper() {
+  const [, setAuthChecked] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    getMe()
+      .then(() => {
+        // 200 → 유효함, 아무것도 안 함
+      })
+      .catch(() => {
+        // 어떤 실패든(401, 네트워크, 타임아웃 등) → 비로그인으로 간주
+        clearAuthStorage();
+        setAuthChecked(true); // re-render 유도 (Header·RequireAuth가 빈 저장소 기준으로 동작)
+        // 보호된 페이지(mypage 등)에 있으면 RequireAuth가 로그인 페이지로 리다이렉트
+      });
+    // 앱 최초 마운트 시 한 번만 실행
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <ScrollToTop />
