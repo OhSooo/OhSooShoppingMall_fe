@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import PageShell from '../../components/common/PageShell';
 import { loginLocal } from '../../services/auth/loginService';
 import { getMe } from '../../api/users/userApi';
-import PasswordInput from '../../components/common/PasswordInput';
+import PasswordInput from '../../components/input/PasswordInput';
 import { API_BASE_URL } from '../../api/config';
 
 // 소셜 로그인 Provider 타입

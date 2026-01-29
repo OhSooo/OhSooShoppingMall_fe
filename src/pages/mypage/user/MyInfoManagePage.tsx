@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PageShell from '../../../components/common/PageShell';
-import SuccessModal from '../../../components/common/SuccessModal';
+import SuccessModal from '../../../components/modal/SuccessModal';
 import { getMyInfo, updateMyProfile } from '../../../services/user/userService';
 
 type Gender = 'MALE' | 'FEMALE' | 'OTHER';

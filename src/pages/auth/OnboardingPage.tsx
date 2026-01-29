@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageShell from '../../components/common/PageShell';
 import { updateMe } from '../../api/users/userApi';
-import SuccessModal from '../../components/common/SuccessModal';
+import SuccessModal from '../../components/modal/SuccessModal';
 
 type Gender = 'MALE' | 'FEMALE' | 'OTHER';
 
