@@ -7,6 +7,8 @@ import {
   setGender,
   setPhone,
   setAddress,
+  setShippingPostcode,
+  setShippingAddressDetail,
   resetSignupData,
   type Gender,
 } from '../../../store/signupSlice';
@@ -17,7 +19,10 @@ import {
   validateBirth,
   validatePhone,
   validateAddress,
+  validateShippingPostcode,
+  validateShippingAddressDetail,
 } from '../../../utils/validation';
+import AddressInput from '../../../components/signup/AddressInput';
 
 type Props = {
   onPrev: () => void;
@@ -26,14 +31,14 @@ type Props = {
 export default function SignupPage_UserInfo({ onPrev }: Props) {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { email, password, name, birth, gender, phone, address } = useAppSelector(
-    (state) => state.signup
-  );
+  const { email, password, name, birth, gender, phone, address, shippingPostcode, shippingAddressDetail } =
+    useAppSelector((state) => state.signup);
 
   const [nameError, setNameError] = useState('');
   const [birthError, setBirthError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [addressError, setAddressError] = useState('');
+  const [shippingAddressDetailError, setShippingAddressDetailError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
@@ -57,10 +62,16 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
     setPhoneError(validation.message);
   };
 
-  const handleAddressChange = (value: string) => {
-    dispatch(setAddress(value));
-    const validation = validateAddress(value);
-    setAddressError(validation.message);
+  const handleAddressChange = (value: {
+    shippingPostcode: string;
+    address: string;
+    shippingAddressDetail: string;
+  }) => {
+    dispatch(setShippingPostcode(value.shippingPostcode));
+    dispatch(setAddress(value.address));
+    dispatch(setShippingAddressDetail(value.shippingAddressDetail));
+    setAddressError(validateAddress(value.address).message);
+    setShippingAddressDetailError(validateShippingAddressDetail(value.shippingAddressDetail).message);
   };
 
   const isFormValid = () => {
@@ -69,10 +80,13 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
       birth &&
       phone &&
       address &&
+      shippingPostcode &&
+      shippingAddressDetail &&
       !nameError &&
       !birthError &&
       !phoneError &&
-      !addressError
+      !addressError &&
+      !shippingAddressDetailError
     );
   };
 
@@ -82,17 +96,22 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
     const birthValidation = validateBirth(birth);
     const phoneValidation = validatePhone(phone);
     const addressValidation = validateAddress(address);
+    const shippingPostcodeValidation = validateShippingPostcode(shippingPostcode);
+    const shippingAddressDetailValidation = validateShippingAddressDetail(shippingAddressDetail);
 
     setNameError(nameValidation.message);
     setBirthError(birthValidation.message);
     setPhoneError(phoneValidation.message);
     setAddressError(addressValidation.message);
+    setShippingAddressDetailError(shippingAddressDetailValidation.message);
 
     if (
       nameValidation.isValid &&
       birthValidation.isValid &&
       phoneValidation.isValid &&
-      addressValidation.isValid
+      addressValidation.isValid &&
+      shippingPostcodeValidation.isValid &&
+      shippingAddressDetailValidation.isValid
     ) {
       setIsLoading(true);
       setSubmitError('');
@@ -106,6 +125,8 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
           gender,
           phone,
           address,
+          shippingPostcode,
+          shippingAddressDetail,
         });
 
         // 회원가입 성공 후 데이터 초기화
@@ -326,51 +347,15 @@ export default function SignupPage_UserInfo({ onPrev }: Props) {
         {!phoneError && <div style={{ minHeight: '18px' }}></div>}
       </div>
 
-      {/* 주소 입력 */}
+      {/* 주소 입력 (우편번호 찾기 + 상세주소) */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-        <label
-          htmlFor="address"
-          style={{
-            fontSize: '14px',
-            fontWeight: '500',
-            color: 'var(--color-gray-5)',
-          }}
-        >
-          주소
-        </label>
-        <input
-          id="address"
-          type="text"
-          value={address}
-          onChange={(e) => handleAddressChange(e.target.value)}
-          placeholder="주소를 입력하세요 (예: 서울시 강남구 테헤란로 123)"
-          style={{
-            width: '100%',
-            padding: '12px 16px',
-            fontSize: '15px',
-            border: addressError ? '1px solid var(--color-point-main)' : '1px solid var(--color-gray-2)',
-            borderRadius: '6px',
-            outline: 'none',
-            transition: 'border-color 0.2s',
-            backgroundColor: 'var(--color-white)',
-          }}
-          onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
-          onBlur={(e) => {
-            if (!addressError) e.target.style.borderColor = 'var(--color-gray-2)';
-          }}
+        <AddressInput
+          value={{ shippingPostcode, address, shippingAddressDetail }}
+          onChange={handleAddressChange}
+          error={addressError}
+          shippingAddressDetailError={shippingAddressDetailError}
+          required
         />
-        {addressError && (
-          <div
-            style={{
-              fontSize: '13px',
-              color: 'var(--color-point-main)',
-              minHeight: '18px',
-            }}
-          >
-            {addressError}
-          </div>
-        )}
-        {!addressError && <div style={{ minHeight: '18px' }}></div>}
       </div>
 
       {/* 버튼들 */}

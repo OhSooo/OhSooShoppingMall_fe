@@ -17,6 +17,8 @@ export function normalizeSignupRequest(data: {
   gender: Gender;
   phone: string;
   address: string;
+  shippingPostcode?: string;
+  shippingAddressDetail?: string;
 }): LocalSignupRequest {
   return {
     email: data.email?.trim() || '',
@@ -26,6 +28,8 @@ export function normalizeSignupRequest(data: {
     gender: data.gender || 'MALE',
     phone: removePhoneHyphens(data.phone) || '', // 하이픈 제거
     address: data.address?.trim() || '',
+    shippingPostcode: data.shippingPostcode?.trim() || undefined,
+    shippingAddressDetail: data.shippingAddressDetail?.trim() || undefined,
   };
 }
 

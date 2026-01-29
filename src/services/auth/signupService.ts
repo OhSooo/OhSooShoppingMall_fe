@@ -50,6 +50,8 @@ export async function submitSignup(data: {
   gender: Gender;
   phone: string;
   address: string;
+  shippingPostcode?: string;
+  shippingAddressDetail?: string;
 }) {
   // 데이터 정제 (normalize)
   const request = normalizeSignupRequest(data);

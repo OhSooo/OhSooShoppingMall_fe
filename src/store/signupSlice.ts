@@ -19,6 +19,8 @@ interface SignupState {
   gender: Gender;
   phone: string;
   address: string;
+  shippingPostcode: string;
+  shippingAddressDetail: string;
 }
 
 const initialState: SignupState = {
@@ -33,6 +35,8 @@ const initialState: SignupState = {
   gender: 'MALE',
   phone: '',
   address: '',
+  shippingPostcode: '',
+  shippingAddressDetail: '',
 };
 
 const signupSlice = createSlice({
@@ -87,6 +91,12 @@ const signupSlice = createSlice({
     setAddress: (state, action: PayloadAction<string>) => {
       state.address = action.payload;
     },
+    setShippingPostcode: (state, action: PayloadAction<string>) => {
+      state.shippingPostcode = action.payload;
+    },
+    setShippingAddressDetail: (state, action: PayloadAction<string>) => {
+      state.shippingAddressDetail = action.payload;
+    },
 
     // 회원가입 데이터 초기화
     resetSignupData: () => initialState,
@@ -105,6 +115,8 @@ export const {
   setGender,
   setPhone,
   setAddress,
+  setShippingPostcode,
+  setShippingAddressDetail,
   resetSignupData,
 } = signupSlice.actions;
 

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PageShell from '../../components/common/PageShell';
 import { updateMe } from '../../api/users/userApi';
 import SuccessModal from '../../components/modal/SuccessModal';
+import AddressInput from '../../components/signup/AddressInput';
 
 type Gender = 'MALE' | 'FEMALE' | 'OTHER';
 
@@ -13,13 +14,16 @@ export default function OnboardingPage() {
   const [birth, setBirth] = useState('');
   const [gender, setGender] = useState<Gender | ''>('');
   const [phone, setPhone] = useState('');
+  const [shippingPostcode, setShippingPostcode] = useState('');
   const [address, setAddress] = useState('');
+  const [shippingAddressDetail, setShippingAddressDetail] = useState('');
 
   const [nameError, setNameError] = useState('');
   const [birthError, setBirthError] = useState('');
   const [genderError, setGenderError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [addressError, setAddressError] = useState('');
+  const [shippingAddressDetailError, setShippingAddressDetailError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -57,13 +61,18 @@ export default function OnboardingPage() {
     }
   };
 
-  const handleAddressChange = (value: string) => {
-    setAddress(value);
-    if (value.length > 255) {
-      setAddressError('주소는 255자 이하로 입력해주세요.');
-    } else {
-      setAddressError('');
-    }
+  const handleAddressChange = (value: {
+    shippingPostcode: string;
+    address: string;
+    shippingAddressDetail: string;
+  }) => {
+    setShippingPostcode(value.shippingPostcode);
+    setAddress(value.address);
+    setShippingAddressDetail(value.shippingAddressDetail);
+    setAddressError(value.address.length > 255 ? '주소는 255자 이하로 입력해주세요.' : '');
+    setShippingAddressDetailError(
+      value.shippingAddressDetail.length > 255 ? '상세주소는 255자 이하로 입력해주세요.' : ''
+    );
   };
 
   const isFormValid = () => {
@@ -73,10 +82,13 @@ export default function OnboardingPage() {
       gender &&
       phone &&
       address &&
+      shippingPostcode &&
+      shippingAddressDetail &&
       !nameError &&
       !birthError &&
       !phoneError &&
-      !addressError
+      !addressError &&
+      !shippingAddressDetailError
     );
   };
 
@@ -88,6 +100,9 @@ export default function OnboardingPage() {
     const birthValidation = birth && new Date(birth) <= new Date();
     const phoneValidation = phone.length >= 10 && phone.length <= 50;
     const addressValidation = address.length > 0 && address.length <= 255;
+    const shippingPostcodeValidation = /^\d{5}$/.test(shippingPostcode);
+    const shippingAddressDetailValidation =
+      shippingAddressDetail.length > 0 && shippingAddressDetail.length <= 255;
     const genderValidation = !!gender;
 
     if (!nameValidation) {
@@ -105,8 +120,22 @@ export default function OnboardingPage() {
     if (!addressValidation) {
       setAddressError('주소를 입력해주세요.');
     }
+    if (!shippingPostcodeValidation && !addressError) {
+      setAddressError('우편번호 찾기로 주소를 선택해주세요.');
+    }
+    if (!shippingAddressDetailValidation) {
+      setShippingAddressDetailError('상세주소를 입력해주세요.');
+    }
 
-    if (nameValidation && birthValidation && phoneValidation && addressValidation && genderValidation) {
+    if (
+      nameValidation &&
+      birthValidation &&
+      phoneValidation &&
+      addressValidation &&
+      shippingPostcodeValidation &&
+      shippingAddressDetailValidation &&
+      genderValidation
+    ) {
       setIsLoading(true);
       setSubmitError('');
 
@@ -117,6 +146,8 @@ export default function OnboardingPage() {
           gender: gender as Gender,
           phone,
           address,
+          shippingPostcode,
+          shippingAddressDetail,
         });
         
         setShowSuccessModal(true);
@@ -389,53 +420,15 @@ export default function OnboardingPage() {
             {!phoneError && <div style={{ minHeight: '18px' }}></div>}
           </div>
 
-          {/* 주소 입력 */}
+          {/* 주소 입력 (우편번호 찾기 + 상세주소) */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <label
-              htmlFor="address"
-              style={{
-                fontSize: '14px',
-                fontWeight: '500',
-                color: 'var(--color-gray-5)',
-              }}
-            >
-              주소 <span style={{ color: 'var(--color-point-main)' }}>*</span>
-            </label>
-            <input
-              id="address"
-              type="text"
-              value={address}
-              onChange={(e) => handleAddressChange(e.target.value)}
-              placeholder="주소를 입력하세요"
-              maxLength={255}
+            <AddressInput
+              value={{ shippingPostcode, address, shippingAddressDetail }}
+              onChange={handleAddressChange}
+              error={addressError}
+              shippingAddressDetailError={shippingAddressDetailError}
               required
-              style={{
-                width: '100%',
-                padding: '12px 16px',
-                fontSize: '15px',
-                border: addressError ? '1px solid var(--color-point-main)' : '1px solid var(--color-gray-2)',
-                borderRadius: '6px',
-                outline: 'none',
-                transition: 'border-color 0.2s',
-                backgroundColor: 'var(--color-white)',
-              }}
-              onFocus={(e) => (e.target.style.borderColor = 'var(--color-point-main)')}
-              onBlur={(e) => {
-                if (!addressError) e.target.style.borderColor = 'var(--color-gray-2)';
-              }}
             />
-            {addressError && (
-              <div
-                style={{
-                  fontSize: '13px',
-                  color: 'var(--color-point-main)',
-                  minHeight: '18px',
-                }}
-              >
-                {addressError}
-              </div>
-            )}
-            {!addressError && <div style={{ minHeight: '18px' }}></div>}
           </div>
 
           {/* 에러 메시지 */}

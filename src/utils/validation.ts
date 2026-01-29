@@ -142,6 +142,40 @@ export function validateAddress(address: string): { isValid: boolean; message: s
 }
 
 /**
+ * 우편번호(shippingPostcode) 유효성 검사 (5자리 숫자)
+ */
+export function validateShippingPostcode(
+  shippingPostcode: string
+): { isValid: boolean; message: string } {
+  if (!shippingPostcode) {
+    return { isValid: false, message: '우편번호를 입력해주세요.' };
+  }
+
+  if (!/^\d{5}$/.test(shippingPostcode)) {
+    return { isValid: false, message: '우편번호는 5자리 숫자여야 합니다.' };
+  }
+
+  return { isValid: true, message: '' };
+}
+
+/**
+ * 상세주소(shippingAddressDetail) 유효성 검사
+ */
+export function validateShippingAddressDetail(
+  shippingAddressDetail: string
+): { isValid: boolean; message: string } {
+  if (!shippingAddressDetail) {
+    return { isValid: false, message: '상세주소를 입력해주세요.' };
+  }
+
+  if (shippingAddressDetail.length > 255) {
+    return { isValid: false, message: '상세주소는 255자 이하여야 합니다.' };
+  }
+
+  return { isValid: true, message: '' };
+}
+
+/**
  * 인증번호 유효성 검사
  */
 export function validateVerificationCode(code: string): { isValid: boolean; message: string } {
