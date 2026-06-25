@@ -22,7 +22,7 @@ import {
   validateShippingPostcode,
   validateShippingAddressDetail,
 } from '../../../utils/validation';
-import AddressInput from '../../../components/signup/AddressInput';
+import AddressInput from '../../../components/common/AddressInput';
 
 type Props = {
   onPrev: () => void;

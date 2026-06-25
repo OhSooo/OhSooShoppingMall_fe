@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PageShell from '../../components/common/PageShell';
 import { updateMe } from '../../api/users/userApi';
 import SuccessModal from '../../components/modal/SuccessModal';
-import AddressInput from '../../components/signup/AddressInput';
+import AddressInput from '../../components/common/AddressInput';
 
 type Gender = 'MALE' | 'FEMALE' | 'OTHER';
 

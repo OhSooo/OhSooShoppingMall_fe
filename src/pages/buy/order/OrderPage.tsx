@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageTitle from '../../../components/common/PageTitle';
 import SectionHeader from '../../../components/common/SectionHeader';
 import Button from '../../../components/common/Button';
+import AddressInput, { type AddressValue } from '../../../components/common/AddressInput';
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -29,6 +31,12 @@ const fieldStyle: React.CSSProperties = {
 export default function OrderPage() {
   const navigate = useNavigate();
 
+  const [addressValue, setAddressValue] = useState<AddressValue>({
+    shippingPostcode: '',
+    address: '',
+    shippingAddressDetail: '',
+  });
+
   return (
     <div style={{ display: 'flex', justifyContent: 'center', padding: '24px 48px 48px' }}>
       <div className="page-card" style={{ padding: 0, overflow: 'hidden' }}>
@@ -38,15 +46,11 @@ export default function OrderPage() {
         <SectionHeader title="배송 정보" />
         <div style={{ padding: '20px 24px 8px', borderBottom: '1px solid var(--color-gray-1)' }}>
           <div style={fieldStyle}>
-            <label style={labelStyle}>배송지</label>
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '6px' }}>
-              <input style={{ ...inputStyle, flex: 1 }} placeholder="주소" readOnly />
-              <input style={{ ...inputStyle, width: '120px', flex: 'none' }} placeholder="우편번호" readOnly />
-              <Button variant="primary" style={{ padding: '10px 16px', fontSize: '13px', borderRadius: '4px' }}>
-                주소 찾기
-              </Button>
-            </div>
-            <input style={inputStyle} placeholder="상세 주소" />
+            <AddressInput
+              label="배송지"
+              value={addressValue}
+              onChange={setAddressValue}
+            />
           </div>
           <div style={fieldStyle}>
             <label style={labelStyle}>수령인</label>
