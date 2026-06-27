@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { setPassword, setPasswordConfirm } from '../../../store/signupSlice';
 import { validatePassword, validatePasswordConfirm } from '../../../utils/validation';
-import PasswordInput from '../../../components/common/PasswordInput';
+import PasswordInput from '../../../components/input/PasswordInput';
 
 type Props = {
   onNext: () => void;

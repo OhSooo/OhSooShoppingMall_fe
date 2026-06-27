@@ -4,25 +4,25 @@
 
 :root {
   /* Color */
-  --color-point-main: #BF4134;
-  --color-point-sub: #E6E5E3;
-  --color-point-back: #F9F9F9;
+  --color-point-main: #3B82F6;
+  --color-point-sub: #EEF4FF;
+  --color-point-back: #F7F9FF;
 
-  --color-gray-0: #F5F5F5;
-  --color-gray-1: #EBEBEB;
-  --color-gray-2: #CACACA;
-  --color-gray-3: #9D9D9D;
-  --color-gray-4: #626262;
-  --color-gray-5: #444444;
+  --color-gray-0: #F8FAFC;
+  --color-gray-1: #E2E8F0;
+  --color-gray-2: #CBD5E1;
+  --color-gray-3: #94A3B8;
+  --color-gray-4: #64748B;
+  --color-gray-5: #334155;
 
-  --color-white: #FDFDFD;
-  --color-black: #1B1B1B;
+  --color-white: #FFFFFF;
+  --color-black: #1E2A3A;
 
-  --color-point-main-hover: #a63a2e;
+  --color-point-main-hover: #2563EB;
 
   /* 기본 텍스트/배경 color */
   color: var(--color-black);
-  background-color: var(--color-white);
+  background-color: var(--color-point-back);
 
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -68,4 +68,16 @@ html, body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+/* 공통 카드 스타일 */
+.page-card {
+  width: 100%;
+  max-width: 900px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-1);
+  border-radius: 8px;
+  height: fit-content;
+  min-height: 400px;
+  overflow: hidden;
 }

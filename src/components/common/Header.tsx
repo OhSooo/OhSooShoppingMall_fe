@@ -22,14 +22,14 @@ export default function Header() {
         height: '64px',
         zIndex: 50,
         backgroundColor: 'var(--color-white)',
-        borderBottom: '3px solid var(--color-point-main)',
+        borderBottom: '1px solid var(--color-gray-1)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         padding: '0 48px',
       }}
     >
-      {/* 좌측: 로고 - 고정 너비 */}
+      {/* 좌측: 로고 */}
       <div style={{ width: '120px', flexShrink: 0 }}>
         <Link
           to="/"
@@ -38,13 +38,14 @@ export default function Header() {
             fontWeight: 600,
             color: 'var(--color-point-main)',
             fontStyle: 'italic',
+            fontFamily: 'Georgia, serif',
           }}
         >
           Mall
         </Link>
       </div>
 
-      {/* 중앙: 검색창 - 고정 위치 유지 */}
+      {/* 중앙: 검색창 */}
       <form onSubmit={handleSubmit} style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
         <div style={{ position: 'relative' }}>
           <input
@@ -53,13 +54,14 @@ export default function Header() {
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             style={{
-              width: '320px',
+              width: '360px',
               borderRadius: '9999px',
-              border: '1px solid var(--color-point-main)',
+              border: '1.5px solid var(--color-point-main)',
               padding: '8px 40px 8px 16px',
               fontSize: '14px',
               outline: 'none',
               backgroundColor: 'var(--color-white)',
+              color: 'var(--color-black)',
             }}
           />
           <button
@@ -94,7 +96,7 @@ export default function Header() {
         </div>
       </form>
 
-      {/* 우측: 네비게이션 - 고정 너비 (좌측과 동일하게) */}
+      {/* 우측: 네비게이션 */}
       <div style={{ width: '120px', flexShrink: 0, display: 'flex', justifyContent: 'flex-end' }}>
         <nav style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '14px' }}>
           {isLoggedIn ? (
@@ -131,15 +133,15 @@ export default function Header() {
                   />
                 </svg>
               </Link>
-              <Link to="/cart" style={{ color: 'var(--color-point-main)' }}>
+              <Link to="/cart" style={{ color: 'var(--color-point-main)', fontSize: '14px', fontWeight: 500 }}>
                 Cart
               </Link>
-              <Link to="/mypage" style={{ color: 'var(--color-point-main)' }}>
+              <Link to="/mypage" style={{ color: 'var(--color-point-main)', fontSize: '14px', fontWeight: 500 }}>
                 User
               </Link>
             </>
           ) : (
-            <Link to="/login" style={{ color: 'var(--color-point-main)' }}>
+            <Link to="/login" style={{ color: 'var(--color-point-main)', fontSize: '14px', fontWeight: 500 }}>
               Login
             </Link>
           )}

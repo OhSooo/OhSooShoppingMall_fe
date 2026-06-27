@@ -29,7 +29,7 @@ export interface EmailVerificationResponse {
   verified: boolean;
 }
 
-// 로컬 회원가입 Request
+// 로컬 회원가입 Request (백엔드 User 엔티티/회원가입 DTO 필드명과 일치)
 export interface LocalSignupRequest {
   email: string;
   password: string;
@@ -38,6 +38,8 @@ export interface LocalSignupRequest {
   gender: 'MALE' | 'FEMALE' | 'OTHER';
   phone: string;
   address: string;
+  shippingPostcode?: string; // 우편번호 (백엔드: shipping_postcode)
+  shippingAddressDetail?: string; // 상세주소 (백엔드: shipping_address_detail)
 }
 
 // 로컬 회원가입 Response
@@ -82,16 +84,18 @@ export interface PasswordChangeResponse {
   changedAt: string; // ISO 8601 형식 (OffsetDateTime)
 }
 
-// 사용자 프로필 수정 Request
+// 사용자 프로필 수정 Request (백엔드 UserProfileUpdateRequestDto와 일치)
 export interface UserProfileUpdateRequest {
   name?: string;
   birth?: string; // YYYY-MM-DD 형식 (LocalDate)
   gender?: 'MALE' | 'FEMALE' | 'OTHER';
   phone?: string;
   address?: string;
+  shippingPostcode?: string; // 우편번호 (백엔드: shipping_postcode)
+  shippingAddressDetail?: string; // 상세주소 (백엔드: shipping_address_detail)
 }
 
-// 내 정보 조회 Response
+// 내 정보 조회 Response (백엔드 UserMeResponseDto와 일치)
 export interface UserMeResponse {
   userId: number;
   name: string;
@@ -99,6 +103,8 @@ export interface UserMeResponse {
   gender: 'MALE' | 'FEMALE' | 'OTHER';
   phone: string;
   address: string;
+  shippingPostcode?: string; // 우편번호 (백엔드: shipping_postcode)
+  shippingAddressDetail?: string; // 상세주소 (백엔드: shipping_address_detail)
   role: 'GENERAL' | 'OWNER' | 'ADMIN';
   onboarded: boolean;
 }

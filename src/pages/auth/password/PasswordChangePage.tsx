@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PageShell from '../../../components/common/PageShell';
-import SuccessModal from '../../../components/common/SuccessModal';
-import PasswordInput from '../../../components/common/PasswordInput';
+import SuccessModal from '../../../components/modal/SuccessModal';
+import PasswordInput from '../../../components/input/PasswordInput';
 import { changePassword } from '../../../services/auth/passwordService';
 
 export default function PasswordChangePage() {
