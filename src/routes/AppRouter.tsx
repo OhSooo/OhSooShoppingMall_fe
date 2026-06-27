@@ -15,6 +15,8 @@ import SignupPage from '@/pages/auth/signup/SignupPage';
 import WelcomePage from '@/pages/auth/signup/WelcomePage';
 import PasswordResetPage from '@/pages/auth/password/PasswordResetPage';
 import PasswordResetedPage from '@/pages/auth/password/PasswordResetedPage';
+import OAuthCallbackPage from '@/pages/auth/OAuthCallbackPage';
+import OnboardingPage from '@/pages/auth/OnboardingPage';
 import HomePage from '@/pages/home/HomePage';
 
 import AllListPage from '@/pages/list/AllListPage';
@@ -69,7 +71,7 @@ function RootWrapper() {
  * auth helpers (임시 localStorage 버전)
  * - 나중에 Redux selector로 교체
  */
-type UserRole = 'USER' | 'STORE_OWNER' | 'ADMIN';
+type UserRole = 'GENERAL' | 'OWNER' | 'ADMIN';
 
 function isLoggedIn(): boolean {
   return Boolean(localStorage.getItem('accessToken'));
@@ -77,7 +79,7 @@ function isLoggedIn(): boolean {
 
 function getRole(): UserRole | null {
   const role = localStorage.getItem('role');
-  if (role === 'USER' || role === 'STORE_OWNER' || role === 'ADMIN') return role;
+  if (role === 'GENERAL' || role === 'OWNER' || role === 'ADMIN') return role;
   return null;
 }
 
@@ -146,6 +148,7 @@ const router = createBrowserRouter([
           { path: 'signup/welcome', element: <WelcomePage /> },
           { path: 'password-reset', element: <PasswordResetPage /> },
           { path: 'password-reset/success', element: <PasswordResetedPage /> },
+          { path: 'oauth/callback', element: <OAuthCallbackPage /> },
           { path: 'unauthorized', element: <UnauthorizedPage /> },
 
           // 목록 / 검색
@@ -157,11 +160,14 @@ const router = createBrowserRouter([
           { path: 'item/:itemId', element: <ItemPage /> },
 
           // ----------------------------
-          // 로그인 필요한 구간 (USER/STORE_OWNER/ADMIN 모두 가능)
+          // 로그인 필요한 구간 (GENERAL/OWNER/ADMIN 모두 가능)
           // ----------------------------
           {
             element: <RequireAuth />,
             children: [
+              // 온보딩 페이지 (소셜 로그인 첫 사용자용)
+              { path: 'onboarding', element: <OnboardingPage /> },
+              
               // 마이페이지
               { path: 'mypage', element: <MyPage /> },
               { path: 'mypage/user', element: <MyInfoManagePage /> },
@@ -189,7 +195,7 @@ const router = createBrowserRouter([
           // 예: "store/manage" 같은 페이지 생기면 여기 넣기
           // ----------------------------
           {
-            element: <RequireRole allowedRoles={['STORE_OWNER']} />,
+            element: <RequireRole allowedRoles={['OWNER']} />,
             children: [
               // TODO: 스토어 오너 전용 페이지 생기면 여기에 추가
               // { path: "owner/dashboard", element: <OwnerDashboardPage /> },
