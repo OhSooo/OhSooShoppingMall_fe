@@ -19,17 +19,20 @@ export default function PageShell({ children }: Props) {
           display: 'flex',
           justifyContent: 'center',
           padding: '40px 48px',
-          minHeight: 'calc(100vh - 64px - 96px)', // 전체 높이 - header - footer
+          // 고정 최소 높이 - 브라우저가 작아지면 스크롤 발생
+          minHeight: '500px',
         }}
       >
         <div
           style={{
             width: '100%',
             maxWidth: '1000px',
-            backgroundColor: '#FDFDFD',
-            border: '3px solid #BF4134',
+            backgroundColor: 'var(--color-white)',
+            border: '3px solid var(--color-point-main)',
             borderRadius: '3px',
-            padding: '24px 32px',
+            padding: '48px 40px',
+            // 컨텐츠에 맞게 자연스럽게 늘어남
+            height: 'fit-content',
             minHeight: '400px',
           }}
         >
@@ -53,18 +56,18 @@ export default function PageShell({ children }: Props) {
         }}
       >
         <div style={{ marginBottom: '4px' }}>
-          <span style={{ color: '#9D9D9D' }}>Page:</span>{' '}
-          <code style={{ color: '#E6E5E3' }}>{location.pathname}</code>
+          <span style={{ color: 'var(--color-gray-3)' }}>Page:</span>{' '}
+          <code style={{ color: 'var(--color-point-sub)' }}>{location.pathname}</code>
         </div>
         <div style={{ marginBottom: '4px' }}>
-          <span style={{ color: '#9D9D9D' }}>Token:</span>{' '}
+          <span style={{ color: 'var(--color-gray-3)' }}>Token:</span>{' '}
           <code style={{ color: token ? '#4ade80' : '#f87171' }}>
             {token ? 'EXISTS' : 'NONE'}
           </code>
         </div>
         <div>
-          <span style={{ color: '#9D9D9D' }}>Role:</span>{' '}
-          <code style={{ color: '#E6E5E3' }}>{role || 'NONE'}</code>
+          <span style={{ color: 'var(--color-gray-3)' }}>Role:</span>{' '}
+          <code style={{ color: 'var(--color-point-sub)' }}>{role || 'NONE'}</code>
         </div>
       </div>
     </>

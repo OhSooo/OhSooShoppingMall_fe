@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   createBrowserRouter,
   RouterProvider,
@@ -11,6 +11,10 @@ import MainLayout from '@/layouts/MainLayout';
 
 // pages
 import LoginPage from '@/pages/auth/LoginPage';
+import SignupPage from '@/pages/auth/signup/SignupPage';
+import WelcomePage from '@/pages/auth/signup/WelcomePage';
+import PasswordResetPage from '@/pages/auth/password/PasswordResetPage';
+import PasswordResetedPage from '@/pages/auth/password/PasswordResetedPage';
 import HomePage from '@/pages/home/HomePage';
 
 import AllListPage from '@/pages/list/AllListPage';
@@ -29,9 +33,11 @@ import PaymentFailPage from '@/pages/buy/payment/PaymentFailPage';
 import ChatPage from '@/pages/chat/ChatPage';
 import ChatRoomPage from '@/pages/chat/ChatRoomPage';
 
+import MyPage from '@/pages/mypage/MyPage';
 import MyInfoManagePage from '@/pages/mypage/user/MyInfoManagePage';
 import MyOrderPage from '@/pages/mypage/order/MyOrderPage';
 import MyReviewPage from '@/pages/mypage/review/MyReviewPage';
+import PasswordChangePage from '@/pages/auth/password/PasswordChangePage';
 
 import NotFoundPage from '@/pages/exception/NotFoundPage';
 import ErrorPage from '@/pages/exception/ErrorPage';
@@ -134,8 +140,12 @@ const router = createBrowserRouter([
           // 홈
           { index: true, element: <HomePage /> },
 
-          // 로그인 / 권한 없음 페이지도 레이아웃 안에
+          // 로그인 / 회원가입 / 권한 없음 페이지도 레이아웃 안에
           { path: 'login', element: <LoginPage /> },
+          { path: 'signup', element: <SignupPage /> },
+          { path: 'signup/welcome', element: <WelcomePage /> },
+          { path: 'password-reset', element: <PasswordResetPage /> },
+          { path: 'password-reset/success', element: <PasswordResetedPage /> },
           { path: 'unauthorized', element: <UnauthorizedPage /> },
 
           // 목록 / 검색
@@ -152,9 +162,10 @@ const router = createBrowserRouter([
           {
             element: <RequireAuth />,
             children: [
-              // 마이페이지: /mypage -> /mypage/user
-              { path: 'mypage', element: <Navigate to="/mypage/user" replace /> },
+              // 마이페이지
+              { path: 'mypage', element: <MyPage /> },
               { path: 'mypage/user', element: <MyInfoManagePage /> },
+              { path: 'mypage/password', element: <PasswordChangePage /> },
               { path: 'mypage/order', element: <MyOrderPage /> },
               { path: 'mypage/review', element: <MyReviewPage /> },
 

@@ -10,8 +10,8 @@ export default function MainLayout() {
         flexDirection: 'column',
         width: '100%',
         minHeight: '100vh',
-        backgroundColor: '#E6E5E3',
-        color: '#1B1B1B',
+        backgroundColor: 'var(--color-point-sub)',
+        color: 'var(--color-black)',
       }}
     >
       <Header />

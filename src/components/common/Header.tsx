@@ -21,8 +21,8 @@ export default function Header() {
         right: 0,
         height: '64px',
         zIndex: 50,
-        backgroundColor: '#FDFDFD',
-        borderBottom: '3px solid #BF4134',
+        backgroundColor: 'var(--color-white)',
+        borderBottom: '3px solid var(--color-point-main)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -36,7 +36,7 @@ export default function Header() {
           style={{
             fontSize: '24px',
             fontWeight: 600,
-            color: '#BF4134',
+            color: 'var(--color-point-main)',
             fontStyle: 'italic',
           }}
         >
@@ -55,11 +55,11 @@ export default function Header() {
             style={{
               width: '320px',
               borderRadius: '9999px',
-              border: '1px solid #BF4134',
+              border: '1px solid var(--color-point-main)',
               padding: '8px 40px 8px 16px',
               fontSize: '14px',
               outline: 'none',
-              backgroundColor: '#FDFDFD',
+              backgroundColor: 'var(--color-white)',
             }}
           />
           <button
@@ -69,7 +69,7 @@ export default function Header() {
               right: '12px',
               top: '50%',
               transform: 'translateY(-50%)',
-              color: '#BF4134',
+              color: 'var(--color-point-main)',
               background: 'none',
               border: 'none',
               padding: 0,
@@ -99,7 +99,7 @@ export default function Header() {
         <nav style={{ display: 'flex', alignItems: 'center', gap: '16px', fontSize: '14px' }}>
           {isLoggedIn ? (
             <>
-              <Link to="/chat" style={{ color: '#BF4134', display: 'flex' }}>
+              <Link to="/chat" style={{ color: 'var(--color-point-main)', display: 'flex' }}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   style={{ width: '20px', height: '20px' }}
@@ -115,7 +115,7 @@ export default function Header() {
                   />
                 </svg>
               </Link>
-              <Link to="/notifications" style={{ color: '#BF4134', display: 'flex' }}>
+              <Link to="/notifications" style={{ color: 'var(--color-point-main)', display: 'flex' }}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   style={{ width: '20px', height: '20px' }}
@@ -131,15 +131,15 @@ export default function Header() {
                   />
                 </svg>
               </Link>
-              <Link to="/cart" style={{ color: '#BF4134' }}>
+              <Link to="/cart" style={{ color: 'var(--color-point-main)' }}>
                 Cart
               </Link>
-              <Link to="/mypage" style={{ color: '#BF4134' }}>
+              <Link to="/mypage" style={{ color: 'var(--color-point-main)' }}>
                 User
               </Link>
             </>
           ) : (
-            <Link to="/login" style={{ color: '#BF4134' }}>
+            <Link to="/login" style={{ color: 'var(--color-point-main)' }}>
               Login
             </Link>
           )}

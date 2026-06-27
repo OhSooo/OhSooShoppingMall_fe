@@ -8,6 +8,7 @@
   --color-point-sub: #E6E5E3;
   --color-point-back: #F9F9F9;
 
+  --color-gray-0: #F5F5F5;
   --color-gray-1: #EBEBEB;
   --color-gray-2: #CACACA;
   --color-gray-3: #9D9D9D;
@@ -16,6 +17,8 @@
 
   --color-white: #FDFDFD;
   --color-black: #1B1B1B;
+
+  --color-point-main-hover: #a63a2e;
 
   /* 기본 텍스트/배경 color */
   color: var(--color-black);
@@ -50,6 +53,16 @@ html, body {
   padding: 0;
   width: 100%;
   overflow-x: hidden;
+}
+
+/* 전역 스크롤바 숨기기 (스크롤 기능은 유지) */
+* {
+  -ms-overflow-style: none;  /* IE, Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+*::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Opera */
 }
 
 h1 {
