@@ -32,6 +32,7 @@ import CartPage from '@/pages/buy/cart/CartPage';
 import OrderPage from '@/pages/buy/order/OrderPage';
 
 import PaymentPage from '@/pages/buy/payment/PaymentPage';
+import PaymentPendingPage from '@/pages/buy/payment/PaymentPendingPage';
 import PaymentSuccessPage from '@/pages/buy/payment/PaymentSuccessPage';
 import PaymentFailPage from '@/pages/buy/payment/PaymentFailPage';
 
@@ -211,6 +212,7 @@ const router = createBrowserRouter([
               // 주문/결제
               { path: 'order', element: <OrderPage /> },
               { path: 'payment', element: <PaymentPage /> },
+              { path: 'payment/pending', element: <PaymentPendingPage /> },
               { path: 'payment/success', element: <PaymentSuccessPage /> },
               { path: 'payment/fail', element: <PaymentFailPage /> },
 
