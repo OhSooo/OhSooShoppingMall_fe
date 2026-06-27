@@ -21,6 +21,7 @@ export interface PaymentCreateResponse {
   requestedAt: string;
   orderName?: string;
   customerName?: string;
+  tossOrderId: string;
 }
 
 export interface PaymentConfirmRequest {
