@@ -293,8 +293,11 @@ export default function OrderPage() {
             </div>
           </div>
 
+          {/* 가름선 */}
+          <hr style={{ margin: '0 24px', border: 'none', borderTop: '1px solid var(--color-gray-1)' }} />
+
           {/* 결제 금액 요약 */}
-          <div style={{ padding: '4px 24px 20px' }}>
+          <div style={{ padding: '16px 24px 20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
             <span style={{ fontSize: '14px', color: 'var(--color-black)' }}>원 금액</span>
             <span style={{ fontSize: '14px', color: 'var(--color-black)' }}>{BASE_AMOUNT.toLocaleString()}원</span>
@@ -313,9 +316,23 @@ export default function OrderPage() {
           </div>
 
           {orderError && (
-            <p style={{ fontSize: '13px', color: 'var(--color-point-main)', marginBottom: '8px', textAlign: 'right' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 14px',
+                marginBottom: '12px',
+                backgroundColor: '#fff5f5',
+                border: '1px solid #fc8181',
+                borderRadius: '6px',
+                color: '#c53030',
+                fontSize: '13px',
+                fontWeight: 500,
+              }}
+            >
               {orderError}
-            </p>
+            </div>
           )}
           <div
             style={{
