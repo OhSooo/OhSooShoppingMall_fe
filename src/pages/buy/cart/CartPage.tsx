@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PageTitle from '../../../components/common/PageTitle';
 import Button from '../../../components/common/Button';
 import { getCart, updateCartItemQuantity, deleteCartItem } from '../../../api/cart/cartApi';
-import { normalizeCart, type CartItem, type CartStoreGroup } from '../../../services/cart/normalizeCart';
+import { normalizeCart, type CartStoreGroup } from '../../../services/cart/normalizeCart';
 import type { OrderPageState } from '../order/OrderPage';
 
 const qBtn: React.CSSProperties = {

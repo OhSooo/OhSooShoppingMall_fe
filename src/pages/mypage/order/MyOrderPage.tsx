@@ -1,126 +1,170 @@
-import PageTitle from '../../../components/common/PageTitle';
-import SectionHeader from '../../../components/common/SectionHeader';
-import Button from '../../../components/common/Button';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import PageShell from '../../../components/common/PageShell';
+import { getOrders, OrderListItemResponse } from '../../../api/order/orderApi';
 
-const labelStyle: React.CSSProperties = {
-  fontSize: '14px',
-  fontWeight: 600,
-  color: 'var(--color-black)',
-  marginBottom: '4px',
-};
+function statusLabel(status: string): string {
+  const map: Record<string, string> = {
+    CREATED: '결제 대기',
+    PAID: '결제 완료',
+    COMPLETED: '구매 완료',
+    CANCELED: '주문 취소',
+    PARTIALLY_CANCELED: '일부 취소',
+    PARTIALLY_REFUNDED: '일부 환불',
+  };
+  return map[status] ?? status;
+}
 
-const valueStyle: React.CSSProperties = {
-  fontSize: '13px',
-  color: 'var(--color-gray-4)',
-  margin: '0 0 12px',
-};
+function statusColor(status: string): string {
+  if (status === 'PAID') return 'var(--color-point-main)';
+  if (status === 'COMPLETED') return '#10b981';
+  if (status === 'CREATED') return '#f59e0b';
+  if (['CANCELED', 'PARTIALLY_CANCELED', 'PARTIALLY_REFUNDED'].includes(status)) return '#ef4444';
+  return 'var(--color-gray-3)';
+}
+
+function formatDate(isoStr: string): string {
+  return isoStr.slice(0, 10).replace(/-/g, '.');
+}
 
 export default function MyOrderPage() {
+  const navigate = useNavigate();
+  const [orders, setOrders] = useState<OrderListItemResponse[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    getOrders()
+      .then(setOrders)
+      .catch(() => setError('주문 내역을 불러오는데 실패했습니다.'))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', padding: '24px 48px 48px' }}>
-      <div className="page-card" style={{ padding: 0, overflow: 'hidden' }}>
-        <PageTitle
-          title="Order"
-          action={
-            <Button variant="secondary" style={{ padding: '8px 16px', fontSize: '13px', borderRadius: '6px' }}>
-              주문 취소 / 환불 / 교환
-            </Button>
-          }
-        />
-
-        {/* 주문 정보 */}
-        <SectionHeader title="주문 정보" />
-        <div style={{ padding: '16px 24px 8px', borderBottom: '1px solid var(--color-gray-1)' }}>
-          <p style={labelStyle}>주문 번호</p>
-          <p style={valueStyle}>주소</p>
-          <p style={labelStyle}>주문 일자</p>
-          <p style={{ ...valueStyle, marginBottom: '16px' }}>받는 분 성함</p>
-        </div>
-
-        {/* 배송 정보 */}
-        <SectionHeader title="배송 정보" />
-        <div style={{ padding: '16px 24px 8px', borderBottom: '1px solid var(--color-gray-1)' }}>
-          <p style={labelStyle}>배송지</p>
-          <div style={{ display: 'flex', gap: '8px', marginBottom: '4px' }}>
-            <p style={{ ...valueStyle, flex: 1, margin: 0 }}>주소</p>
-            <p style={{ ...valueStyle, width: '100px', margin: 0 }}>우편번호</p>
-          </div>
-          <p style={{ ...valueStyle, marginBottom: '12px' }}>상세 주소</p>
-
-          <p style={labelStyle}>수령인</p>
-          <p style={valueStyle}>받는 분 성함</p>
-          <p style={labelStyle}>전화번호</p>
-          <p style={valueStyle}>000-0000-0000</p>
-          <p style={labelStyle}>배송 메모</p>
-          <p style={{ ...valueStyle, marginBottom: '16px' }}>EX) 부재중엔 경비실에 맡겨주세요.</p>
-        </div>
-
-        {/* 주문 상품 */}
-        <SectionHeader title="주문 상품" />
-        <div style={{ padding: '12px 24px', borderBottom: '1px solid var(--color-gray-1)' }}>
-          <div style={{ marginBottom: '4px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--color-gray-1)' }}>
-              <span style={{ fontSize: '13px', fontWeight: 600 }}>멍멍망망밍샵</span>
-              <span style={{ fontSize: '12px', color: 'var(--color-gray-4)' }}>상품 80,000원 + 배송비 0원 = 80,000원</span>
-            </div>
-            {[
-              { name: '로얄캐닌', option: '대형견 (+ 5000)', price: 25000, qty: 1, total: 30000 },
-              { name: '로얄캐닌', option: '소형견', price: 25000, qty: 2, total: 50000 },
-            ].map((item, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid var(--color-gray-1)', gap: '12px' }}>
-                <div style={{ width: '50px', height: '50px', borderRadius: '4px', backgroundColor: 'var(--color-gray-0)', border: '1px solid var(--color-gray-1)', flexShrink: 0 }} />
-                <div style={{ flex: 1 }}>
-                  <p style={{ margin: '0 0 2px', fontSize: '14px', fontWeight: 600 }}>{item.name}</p>
-                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--color-gray-3)' }}>{item.option}</p>
-                  <p style={{ margin: '2px 0 0', fontSize: '13px', color: 'var(--color-gray-4)' }}>{item.price.toLocaleString()}원</p>
-                  <p style={{ margin: 0, fontSize: '12px', color: 'var(--color-gray-4)' }}>X {item.qty}</p>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <Button variant="secondary" style={{ padding: '4px 10px', fontSize: '12px', borderRadius: '4px', marginBottom: '6px' }}>
-                    옵션 변경
-                  </Button>
-                  <p style={{ margin: 0, fontSize: '15px', fontWeight: 700 }}>합계 {item.total.toLocaleString()}원</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* 결제 정보 */}
-        <SectionHeader title="결제 정보" />
-        <div style={{ padding: '16px 24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-            <span style={{ fontSize: '14px' }}>원 금액</span>
-            <span style={{ fontSize: '14px' }}>31,000원</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-            <span style={{ fontSize: '14px' }}>쿠폰 할인</span>
-            <span style={{ fontSize: '14px', color: 'var(--color-gray-4)' }}>- 0원</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-            <span style={{ fontSize: '14px' }}>마일리지 적용</span>
-            <span style={{ fontSize: '14px', color: 'var(--color-gray-4)' }}>- 0원</span>
-          </div>
-          <div
+    <PageShell>
+      <div style={{ maxWidth: '680px', margin: '0 auto' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '28px' }}>
+          <button
+            type="button"
+            onClick={() => navigate('/mypage')}
             style={{
-              padding: '14px 16px',
-              backgroundColor: 'var(--color-gray-0)',
-              borderRadius: '6px',
-              textAlign: 'right',
-              marginBottom: '20px',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '4px 8px',
+              fontSize: '18px',
+              color: 'var(--color-black)',
+              lineHeight: 1,
             }}
           >
-            <span style={{ fontSize: '17px', fontWeight: 700 }}>총 31,000원</span>
-          </div>
-
-          <p style={labelStyle}>결제 번호</p>
-          <p style={valueStyle}>000-0000-0000</p>
-          <p style={labelStyle}>결제 방법</p>
-          <p style={valueStyle}>EX) 부재중엔 경비실에 맡겨주세요.</p>
-          <p style={labelStyle}>결제 수단</p>
-          <p style={{ ...valueStyle, marginBottom: 0 }}>EX) 부재중엔 경비실에 맡겨주세요.</p>
+            ←
+          </button>
+          <h1 style={{ fontSize: '24px', fontWeight: 700, color: 'var(--color-black)', margin: 0 }}>
+            주문 내역
+          </h1>
         </div>
+
+        {loading && (
+          <p style={{ textAlign: 'center', padding: '60px 0', color: 'var(--color-gray-4)', fontSize: '14px' }}>
+            불러오는 중...
+          </p>
+        )}
+
+        {error && (
+          <p style={{ textAlign: 'center', padding: '60px 0', color: 'var(--color-point-main)', fontSize: '14px' }}>
+            {error}
+          </p>
+        )}
+
+        {!loading && !error && orders.length === 0 && (
+          <p style={{ textAlign: 'center', padding: '80px 0', color: 'var(--color-gray-3)', fontSize: '15px' }}>
+            주문 내역이 없습니다.
+          </p>
+        )}
+
+        {!loading && !error && orders.length > 0 && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {orders.map((order) => {
+              const color = statusColor(order.status);
+              return (
+                <div
+                  key={order.orderId}
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => navigate(`/mypage/order/${order.orderId}`)}
+                  onKeyDown={(e) => e.key === 'Enter' && navigate(`/mypage/order/${order.orderId}`)}
+                  style={{
+                    padding: '20px 24px',
+                    border: '2px solid var(--color-gray-2)',
+                    borderRadius: '8px',
+                    backgroundColor: 'var(--color-white)',
+                    cursor: 'pointer',
+                    transition: 'border-color 0.15s, background-color 0.15s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-point-main)';
+                    e.currentTarget.style.backgroundColor = 'var(--color-point-back)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--color-gray-2)';
+                    e.currentTarget.style.backgroundColor = 'var(--color-white)';
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '8px',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontSize: '13px', color: 'var(--color-gray-3)' }}>
+                        {formatDate(order.createdAt)}
+                      </span>
+                      <span
+                        style={{
+                          fontSize: '12px',
+                          fontWeight: 600,
+                          color,
+                          backgroundColor: color + '1a',
+                          padding: '2px 9px',
+                          borderRadius: '12px',
+                        }}
+                      >
+                        {statusLabel(order.status)}
+                      </span>
+                    </div>
+                    <span style={{ fontSize: '12px', color: 'var(--color-gray-3)' }}>
+                      주문 #{order.orderId}
+                    </span>
+                  </div>
+
+                  <p
+                    style={{
+                      margin: '0 0 10px',
+                      fontSize: '15px',
+                      fontWeight: 600,
+                      color: 'var(--color-black)',
+                    }}
+                  >
+                    {order.summary}
+                  </p>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '16px', fontWeight: 700, color: 'var(--color-black)' }}>
+                      {order.finalPrice.toLocaleString()}원
+                    </span>
+                    <span style={{ fontSize: '13px', color: 'var(--color-point-main)', fontWeight: 600 }}>
+                      상세 보기 →
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
-    </div>
+    </PageShell>
   );
 }
