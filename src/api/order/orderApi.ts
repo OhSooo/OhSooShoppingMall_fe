@@ -16,7 +16,7 @@ export interface OrderItemCreateRequest {
 
 export interface OrderCreateRequest {
   source: 'CART_ALL' | 'CART_SELECTED' | 'DIRECT';
-  cartItemIds?: number[];
+  itemVariantIds?: number[];
   items?: OrderItemCreateRequest[];
   memo?: string;
   shipping?: ShippingInfo;

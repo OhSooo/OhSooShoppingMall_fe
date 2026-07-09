@@ -9,7 +9,7 @@ import type { CartItem } from '../../../services/cart/normalizeCart';
 import type { PaymentPageState } from '../payment/PaymentPage';
 
 export interface OrderPageState {
-  cartItemIds: number[];
+  itemVariantIds: number[];
   items: CartItem[];
   originalTotalPrice: number;
 }
@@ -149,7 +149,7 @@ export default function OrderPage() {
                 <div style={{ marginBottom: '8px' }}>
                   {orderItems.map((item) => (
                     <div
-                      key={item.cartItemId}
+                      key={item.itemVariantId}
                       style={{
                         display: 'flex',
                         alignItems: 'center',
@@ -440,7 +440,7 @@ export default function OrderPage() {
                   try {
                     const order = await createOrder({
                       source: 'CART_SELECTED',
-                      cartItemIds: state.cartItemIds,
+                      itemVariantIds: state.itemVariantIds,
                       memo: deliveryMemo || undefined,
                       shipping: {
                         receiverName,
