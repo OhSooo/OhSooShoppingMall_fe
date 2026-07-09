@@ -1,7 +1,6 @@
 import type { CartItemResponse, CartResponse } from '../../api/cart/cartApi';
 
 export interface CartItem {
-  cartItemId: number;
   itemVariantId: number;
   itemName: string;
   price: number;
@@ -21,14 +20,12 @@ export interface CartStoreGroup {
 }
 
 export interface Cart {
-  cartId: number;
   totalPrice: number;
   stores: CartStoreGroup[];
   items: CartItem[];
 }
 
 export const normalizeCartItem = (item: CartItemResponse): CartItem => ({
-  cartItemId: item.cartItemId,
   itemVariantId: item.itemVariantId,
   itemName: item.itemName,
   price: item.price,
@@ -59,7 +56,6 @@ export const normalizeCart = (cart: CartResponse): Cart => {
   }
 
   return {
-    cartId: cart.cartId,
     totalPrice: cart.totalPrice,
     stores: Array.from(storeMap.values()),
     items,

@@ -52,7 +52,7 @@ export default function CartPage() {
       const cartResponse = await getCart();
       const cart = normalizeCart(cartResponse);
       setStores(cart.stores);
-      setChecked(Object.fromEntries(cart.items.map((i) => [i.cartItemId, true])));
+      setChecked(Object.fromEntries(cart.items.map((i) => [i.itemVariantId, true])));
     } catch (err) {
       setFetchError(err instanceof Error ? err.message : '장바구니를 불러오지 못했습니다.');
     } finally {
@@ -65,7 +65,7 @@ export default function CartPage() {
   }, [loadCart]);
 
   const allItems = stores.flatMap((s) => s.items);
-  const allItemIds = allItems.map((i) => i.cartItemId);
+  const allItemIds = allItems.map((i) => i.itemVariantId);
   const allChecked = allItemIds.length > 0 && allItemIds.every((id) => checked[id]);
   const checkedCount = allItemIds.filter((id) => checked[id]).length;
 
@@ -76,17 +76,17 @@ export default function CartPage() {
 
   const toggleStore = (storeId: number) => {
     const store = stores.find((s) => s.storeId === storeId)!;
-    const ids = store.items.map((i) => i.cartItemId);
+    const ids = store.items.map((i) => i.itemVariantId);
     const allStoreChecked = ids.every((id) => checked[id]);
     setChecked((prev) => ({ ...prev, ...Object.fromEntries(ids.map((id) => [id, !allStoreChecked])) }));
   };
 
-  const toggleItem = (cartItemId: number) => {
-    setChecked((prev) => ({ ...prev, [cartItemId]: !prev[cartItemId] }));
+  const toggleItem = (itemVariantId: number) => {
+    setChecked((prev) => ({ ...prev, [itemVariantId]: !prev[itemVariantId] }));
   };
 
-  const changeQty = async (cartItemId: number, delta: number) => {
-    const item = allItems.find((i) => i.cartItemId === cartItemId);
+  const changeQty = async (itemVariantId: number, delta: number) => {
+    const item = allItems.find((i) => i.itemVariantId === itemVariantId);
     if (!item) return;
     const newQty = Math.max(1, item.quantity + delta);
     if (newQty === item.quantity) return;
@@ -96,17 +96,17 @@ export default function CartPage() {
       prev.map((s) => ({
         ...s,
         items: s.items.map((i) =>
-          i.cartItemId === cartItemId ? { ...i, quantity: newQty, total: i.price * newQty } : i,
+          i.itemVariantId === itemVariantId ? { ...i, quantity: newQty, total: i.price * newQty } : i,
         ),
         storeTotal: s.items.reduce(
-          (sum, i) => sum + (i.cartItemId === cartItemId ? i.price * newQty : i.total),
+          (sum, i) => sum + (i.itemVariantId === itemVariantId ? i.price * newQty : i.total),
           0,
         ),
       })),
     );
 
     try {
-      const cartResponse = await updateCartItemQuantity(cartItemId, { quantity: newQty });
+      const cartResponse = await updateCartItemQuantity(itemVariantId, { quantity: newQty });
       const cart = normalizeCart(cartResponse);
       setStores(cart.stores);
     } catch (err) {
@@ -115,12 +115,12 @@ export default function CartPage() {
         prev.map((s) => ({
           ...s,
           items: s.items.map((i) =>
-            i.cartItemId === cartItemId
+            i.itemVariantId === itemVariantId
               ? { ...i, quantity: item.quantity, total: item.price * item.quantity }
               : i,
           ),
           storeTotal: s.items.reduce(
-            (sum, i) => sum + (i.cartItemId === cartItemId ? item.price * item.quantity : i.total),
+            (sum, i) => sum + (i.itemVariantId === itemVariantId ? item.price * item.quantity : i.total),
             0,
           ),
         })),
@@ -129,24 +129,24 @@ export default function CartPage() {
     }
   };
 
-  const deleteItem = async (cartItemId: number) => {
+  const deleteItem = async (itemVariantId: number) => {
     // 옵티미스틱 삭제
     setStores((prev) =>
       prev
         .map((s) => {
-          const items = s.items.filter((i) => i.cartItemId !== cartItemId);
+          const items = s.items.filter((i) => i.itemVariantId !== itemVariantId);
           return { ...s, items, storeTotal: items.reduce((sum, i) => sum + i.total, 0) };
         })
         .filter((s) => s.items.length > 0),
     );
     setChecked((prev) => {
       const next = { ...prev };
-      delete next[cartItemId];
+      delete next[itemVariantId];
       return next;
     });
 
     try {
-      await deleteCartItem(cartItemId);
+      await deleteCartItem(itemVariantId);
     } catch (err) {
       await loadCart();
       alert(err instanceof Error ? err.message : '삭제에 실패했습니다.');
@@ -157,7 +157,7 @@ export default function CartPage() {
     const store = stores.find((s) => s.storeId === storeId);
     if (!store) return;
 
-    const ids = store.items.map((i) => i.cartItemId);
+    const ids = store.items.map((i) => i.itemVariantId);
 
     // 옵티미스틱 삭제
     setStores((prev) => prev.filter((s) => s.storeId !== storeId));
@@ -175,13 +175,13 @@ export default function CartPage() {
     }
   };
 
-  const checkedItems = allItems.filter((i) => checked[i.cartItemId]);
+  const checkedItems = allItems.filter((i) => checked[i.itemVariantId]);
   const checkedTotal = checkedItems.reduce((s, i) => s + i.total, 0);
 
   const handleOrder = () => {
     if (checkedItems.length === 0) return;
     const state: OrderPageState = {
-      cartItemIds: checkedItems.map((i) => i.cartItemId),
+      itemVariantIds: checkedItems.map((i) => i.itemVariantId),
       items: checkedItems,
       originalTotalPrice: checkedTotal,
     };
@@ -255,7 +255,7 @@ export default function CartPage() {
 
         <div style={{ padding: '20px 0' }}>
           {stores.map((store) => {
-            const storeItemIds = store.items.map((i) => i.cartItemId);
+            const storeItemIds = store.items.map((i) => i.itemVariantId);
             const allStoreChecked = storeItemIds.every((id) => checked[id]);
             const someStoreChecked = storeItemIds.some((id) => checked[id]);
 
@@ -304,21 +304,21 @@ export default function CartPage() {
                 {/* 상품 목록 */}
                 {store.items.map((item) => (
                   <div
-                    key={item.cartItemId}
+                    key={item.itemVariantId}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
                       padding: '14px 20px',
                       borderBottom: '1px solid var(--color-gray-1)',
                       gap: '12px',
-                      backgroundColor: checked[item.cartItemId] ? 'var(--color-white)' : 'var(--color-gray-0)',
+                      backgroundColor: checked[item.itemVariantId] ? 'var(--color-white)' : 'var(--color-gray-0)',
                       transition: 'background-color 0.15s',
                     }}
                   >
                     <input
                       type="checkbox"
-                      checked={checked[item.cartItemId] ?? false}
-                      onChange={() => toggleItem(item.cartItemId)}
+                      checked={checked[item.itemVariantId] ?? false}
+                      onChange={() => toggleItem(item.itemVariantId)}
                       style={{ width: '16px', height: '16px', flexShrink: 0, cursor: 'pointer' }}
                     />
                     <div
@@ -351,13 +351,13 @@ export default function CartPage() {
                     </div>
                     {/* 수량 */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <button style={qBtn} onClick={() => changeQty(item.cartItemId, -1)}>
+                      <button style={qBtn} onClick={() => changeQty(item.itemVariantId, -1)}>
                         ‹
                       </button>
                       <span style={{ fontSize: '14px', minWidth: '20px', textAlign: 'center' }}>
                         {item.quantity}
                       </span>
-                      <button style={qBtn} onClick={() => changeQty(item.cartItemId, 1)}>
+                      <button style={qBtn} onClick={() => changeQty(item.itemVariantId, 1)}>
                         ›
                       </button>
                     </div>
@@ -365,7 +365,7 @@ export default function CartPage() {
                       style={{
                         fontSize: '15px',
                         fontWeight: 700,
-                        color: checked[item.cartItemId] ? 'var(--color-black)' : 'var(--color-gray-3)',
+                        color: checked[item.itemVariantId] ? 'var(--color-black)' : 'var(--color-gray-3)',
                         minWidth: '80px',
                         textAlign: 'right',
                         transition: 'color 0.15s',
@@ -375,7 +375,7 @@ export default function CartPage() {
                     </span>
                     <button
                       style={delBtn}
-                      onClick={() => deleteItem(item.cartItemId)}
+                      onClick={() => deleteItem(item.itemVariantId)}
                       title="상품 삭제"
                     >
                       ×

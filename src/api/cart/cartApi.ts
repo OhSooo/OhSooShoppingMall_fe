@@ -15,7 +15,6 @@ export interface CartItemOptionResponse {
 }
 
 export interface CartItemResponse {
-  cartItemId: number;
   itemVariantId: number;
   itemName: string;
   price: number;
@@ -27,7 +26,6 @@ export interface CartItemResponse {
 }
 
 export interface CartResponse {
-  cartId: number;
   userId: number;
   totalPrice: number;
   items: CartItemResponse[];
@@ -49,10 +47,10 @@ export async function addCartItem(request: CartItemAddRequest): Promise<CartResp
 }
 
 export async function updateCartItemQuantity(
-  cartItemId: number,
+  itemVariantId: number,
   request: CartItemUpdateRequest,
 ): Promise<CartResponse> {
-  const response = await authenticatedFetch(`${API_BASE_URL}/cart/items/${cartItemId}`, {
+  const response = await authenticatedFetch(`${API_BASE_URL}/cart/items/${itemVariantId}`, {
     method: 'PATCH',
     body: JSON.stringify(request),
   });
@@ -60,8 +58,8 @@ export async function updateCartItemQuantity(
   return data.data!;
 }
 
-export async function deleteCartItem(cartItemId: number): Promise<void> {
-  const response = await authenticatedFetch(`${API_BASE_URL}/cart/items/${cartItemId}`, {
+export async function deleteCartItem(itemVariantId: number): Promise<void> {
+  const response = await authenticatedFetch(`${API_BASE_URL}/cart/items/${itemVariantId}`, {
     method: 'DELETE',
   });
   if (!response.ok) {
