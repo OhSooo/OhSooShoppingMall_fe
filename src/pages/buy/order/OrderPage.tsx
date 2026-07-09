@@ -4,6 +4,8 @@ import PageTitle from '../../../components/common/PageTitle';
 import SectionHeader from '../../../components/common/SectionHeader';
 import Button from '../../../components/common/Button';
 import AddressInput, { type AddressValue } from '../../../components/common/AddressInput';
+import { createOrder } from '../../../api/order/orderApi';
+import type { PaymentPageState } from '../payment/PaymentPage';
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -44,10 +46,15 @@ export default function OrderPage() {
     address: '',
     shippingAddressDetail: '',
   });
+  const [receiverName, setReceiverName] = useState('');
+  const [receiverPhone, setReceiverPhone] = useState('');
+  const [deliveryMemo, setDeliveryMemo] = useState('');
 
   const [couponOpen, setCouponOpen] = useState(false);
   const [selectedCoupon, setSelectedCoupon] = useState<string | null>(null);
   const [mileage, setMileage] = useState('0');
+  const [ordering, setOrdering] = useState(false);
+  const [orderError, setOrderError] = useState<string | null>(null);
 
   const coupon = COUPONS.find((c) => c.id === selectedCoupon) ?? null;
   const couponDiscount = coupon
@@ -78,15 +85,30 @@ export default function OrderPage() {
               </div>
               <div style={fieldStyle}>
                 <label style={labelStyle}>수령인</label>
-                <input style={inputStyle} placeholder="받는 분 성함" />
+                <input
+                  style={inputStyle}
+                  placeholder="받는 분 성함"
+                  value={receiverName}
+                  onChange={(e) => setReceiverName(e.target.value)}
+                />
               </div>
               <div style={fieldStyle}>
                 <label style={labelStyle}>전화번호</label>
-                <input style={inputStyle} placeholder="000-0000-0000" />
+                <input
+                  style={inputStyle}
+                  placeholder="000-0000-0000"
+                  value={receiverPhone}
+                  onChange={(e) => setReceiverPhone(e.target.value)}
+                />
               </div>
               <div style={{ ...fieldStyle, marginBottom: '20px' }}>
                 <label style={labelStyle}>배송 메모</label>
-                <input style={inputStyle} placeholder="EX) 부재중엔 경비실에 맡겨주세요." />
+                <input
+                  style={inputStyle}
+                  placeholder="EX) 부재중엔 경비실에 맡겨주세요."
+                  value={deliveryMemo}
+                  onChange={(e) => setDeliveryMemo(e.target.value)}
+                />
               </div>
             </div>
           </div>
@@ -271,8 +293,11 @@ export default function OrderPage() {
             </div>
           </div>
 
+          {/* 가름선 */}
+          <hr style={{ margin: '0 24px', border: 'none', borderTop: '1px solid var(--color-gray-1)' }} />
+
           {/* 결제 금액 요약 */}
-          <div style={{ padding: '4px 24px 20px' }}>
+          <div style={{ padding: '16px 24px 20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
             <span style={{ fontSize: '14px', color: 'var(--color-black)' }}>원 금액</span>
             <span style={{ fontSize: '14px', color: 'var(--color-black)' }}>{BASE_AMOUNT.toLocaleString()}원</span>
@@ -290,6 +315,25 @@ export default function OrderPage() {
             </span>
           </div>
 
+          {orderError && (
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 14px',
+                marginBottom: '12px',
+                backgroundColor: '#fff5f5',
+                border: '1px solid #fc8181',
+                borderRadius: '6px',
+                color: '#c53030',
+                fontSize: '13px',
+                fontWeight: 500,
+              }}
+            >
+              {orderError}
+            </div>
+          )}
           <div
             style={{
               display: 'flex',
@@ -303,8 +347,45 @@ export default function OrderPage() {
             <span style={{ fontSize: '17px', fontWeight: 700, color: 'var(--color-black)' }}>
               총 {totalAmount.toLocaleString()}원
             </span>
-            <Button variant="primary" onClick={() => navigate('/payment')} style={{ padding: '10px 28px' }}>
-              주문
+            <Button
+              variant="primary"
+              disabled={ordering}
+              onClick={async () => {
+                if (!addressValue.address || !receiverName || !receiverPhone) {
+                  setOrderError('배송지, 수령인, 전화번호를 입력해 주세요.');
+                  return;
+                }
+                setOrdering(true);
+                setOrderError(null);
+                try {
+                  const order = await createOrder({
+                    source: 'CART_ALL',
+                    memo: deliveryMemo || undefined,
+                    shipping: {
+                      receiverName,
+                      receiverPhone,
+                      shippingAddress: addressValue.address,
+                      shippingPostcode: addressValue.shippingPostcode || undefined,
+                      shippingAddressDetail: addressValue.shippingAddressDetail || undefined,
+                      requestNote: deliveryMemo || undefined,
+                    },
+                  });
+                  const state: PaymentPageState = {
+                    orderId: order.orderId,
+                    finalPrice: order.finalPrice,
+                    orderName: `오쑤 쇼핑몰 주문 ${order.orderId}`,
+                    customerName: receiverName,
+                  };
+                  navigate('/payment', { state });
+                } catch (err) {
+                  const msg = err instanceof Error ? err.message : '주문 생성에 실패했습니다.';
+                  setOrderError(msg);
+                  setOrdering(false);
+                }
+              }}
+              style={{ padding: '10px 28px' }}
+            >
+              {ordering ? '처리 중...' : '주문'}
             </Button>
           </div>
           </div>
