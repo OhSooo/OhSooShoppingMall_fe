@@ -74,9 +74,7 @@ export default function PaymentPage() {
         customerName: state.customerName,
       });
       const paymentId = res.paymentId;
-
-      // Toss orderId = PAY + paymentId (결제 시도마다 고유 → 중복 방지)
-      const tossOrderId = `PAY${String(paymentId).padStart(6, '0')}`;
+      const tossOrderId = res.tossOrderId;
 
       await paymentRef.current.requestPayment({
         method: 'CARD',

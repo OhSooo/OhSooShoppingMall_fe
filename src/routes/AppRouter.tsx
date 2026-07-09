@@ -42,6 +42,7 @@ import ChatRoomPage from '@/pages/chat/ChatRoomPage';
 import MyPage from '@/pages/mypage/MyPage';
 import MyInfoManagePage from '@/pages/mypage/user/MyInfoManagePage';
 import MyOrderPage from '@/pages/mypage/order/MyOrderPage';
+import MyOrderDetailPage from '@/pages/mypage/order/MyOrderDetailPage';
 import MyReviewPage from '@/pages/mypage/review/MyReviewPage';
 import PasswordChangePage from '@/pages/auth/password/PasswordChangePage';
 
@@ -204,6 +205,7 @@ const router = createBrowserRouter([
               { path: 'mypage/user', element: <MyInfoManagePage /> },
               { path: 'mypage/password', element: <PasswordChangePage /> },
               { path: 'mypage/order', element: <MyOrderPage /> },
+              { path: 'mypage/order/:orderId', element: <MyOrderDetailPage /> },
               { path: 'mypage/review', element: <MyReviewPage /> },
 
               // 장바구니
