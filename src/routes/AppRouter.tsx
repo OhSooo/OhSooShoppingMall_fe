@@ -27,6 +27,7 @@ import SearchListPage from '@/pages/list/SearchListPage';
 
 import ItemPage from '@/pages/item/ItemPage';
 import StorePage from '@/pages/store/StorePage';
+import StoreCatalogTestPage from '@/pages/store/StoreCatalogTestPage';
 
 import CartPage from '@/pages/buy/cart/CartPage';
 import OrderPage from '@/pages/buy/order/OrderPage';
@@ -210,6 +211,9 @@ const router = createBrowserRouter([
 
               // 장바구니
               { path: 'cart', element: <CartPage /> },
+
+              // Store/Catalog API 연동 테스트용 (최소 UI)
+              { path: 'store-catalog-test', element: <StoreCatalogTestPage /> },
 
               // 주문/결제
               { path: 'order', element: <OrderPage /> },
