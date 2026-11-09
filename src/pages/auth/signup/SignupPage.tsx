@@ -103,7 +103,7 @@ export default function SignupPage() {
           />
 
           {/* Step 버블들 */}
-          {steps.map((step, index) => {
+          {steps.map((step) => {
             const isActive = currentStep === step.number;
             const isCompleted = currentStep > step.number;
 

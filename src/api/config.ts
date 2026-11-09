@@ -29,7 +29,20 @@ export class ApiError extends Error {
 export async function handleApiResponse<T>(
   response: Response
 ): Promise<BaseResponse<T>> {
-  const data: BaseResponse<T> = await response.json();
+  // 204 No Content 등 본문 없는 응답은 JSON 파싱하지 않음
+  const text = await response.text();
+  if (text.trim() === '') {
+    if (!response.ok) {
+      throw new ApiError(
+        response.status,
+        `HTTP_${response.status}`,
+        `HTTP error! status: ${response.status}`
+      );
+    }
+    return { success: true, code: response.status, message: '', data: null };
+  }
+
+  const data: BaseResponse<T> = JSON.parse(text);
 
   // BaseResponse의 success가 false이거나 HTTP 상태가 에러인 경우
   if (!data.success || !response.ok) {

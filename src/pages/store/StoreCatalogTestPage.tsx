@@ -427,7 +427,8 @@ export default function StoreCatalogTestPage() {
     try {
       const result = await upsertDeliveryPolicy(Number(storeId), {
         baseDeliveryFee: Number(baseDeliveryFee),
-        freeDeliveryThreshold: freeDeliveryThreshold ? Number(freeDeliveryThreshold) : undefined,
+        // 입력란을 비우면 무료배송 기준 제거(명시적 null)
+        freeDeliveryThreshold: freeDeliveryThreshold ? Number(freeDeliveryThreshold) : null,
       });
       setDeliveryPolicyResult(result);
     } catch (err) {

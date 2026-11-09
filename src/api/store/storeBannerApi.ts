@@ -4,8 +4,8 @@ export interface StoreBannerResponse {
   storeBannerId: number;
   storeId: number;
   imageUrl: string;
-  linkUrl: string;
-  title: string;
+  linkUrl: string | null;
+  title: string | null;
   sortOrder: number;
   createdAt: string;
   updatedAt: string;

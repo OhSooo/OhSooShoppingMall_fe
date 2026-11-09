@@ -1,6 +1,7 @@
 import {
   API_BASE_URL,
   authenticatedFetch,
+  defaultFetchOptions,
   handleApiResponse,
 } from '../../../api/config';
 import type {
